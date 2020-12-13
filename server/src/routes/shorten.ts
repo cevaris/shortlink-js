@@ -12,11 +12,9 @@ router.post('/shorten', async (req: express.Request, res: express.Response) => {
     const slug = uniq(6);
     const link = new Link(slug, req.query.link.toString());
 
-    console.log(`shortening ${link.link} link -> ${link.slug}`);
-
+    // TODO: error handling, duplicate slug
+    // TODO: error handling 
     await insertLink(link);
-
-    console.log(`shortend ${link.link}`);
 
     res.json({
         success: true,
@@ -27,11 +25,11 @@ router.post('/shorten', async (req: express.Request, res: express.Response) => {
     });
 });
 
-const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+const slugChars = '0123456789abcdefghijklmnopqrstuvwxyz';
 function uniq(len: number) {
     var result = '';
     for (var i = 0; i < len; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+        result += slugChars.charAt(Math.floor(Math.random() * slugChars.length));
     }
     return result;
 }

@@ -1,16 +1,23 @@
 # ShortLink
 
-Typescript based link shortener
+Typescript based link/URL shortener
 
-- Frontend (CLI) (Ionic5)
+- Frontend (CLI) (Ionic)
 - HTTP API (Express)
-- KeyValue Database (Firebase)
-  - short -> long
+- KeyValue Database (AWS)
+  - slug -> url/link
 
-localhost:3000/xxxxxx
-localhost:3000/aaabbb
+Shorten
 
+    curl -XPOST 'localhost:3000/shorten?link=http://google.com'
 
+Expanding
 
-npm install nodemon typescript @types/typescript --save-dev
-npm install aws-sdk express @types/express
+    curl 'localhost:3000/sgev27'
+
+Installs
+
+    # dev packages
+    npm install nodemon typescript @types/typescript --save-dev
+    # packages
+    npm install aws-sdk express @types/express
