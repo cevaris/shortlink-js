@@ -1,20 +1,39 @@
 import express from 'express';
+import { insertLink } from '../clients/linkClient';
+import { Link } from '../types';
 
 const router = express.Router();
 
-router.post('/shorten', (req: express.Request, res: express.Response) => {
+router.post('/shorten', async (req: express.Request, res: express.Response) => {
     if (!req.query.link) {
-        res.json({ success: false, message: 'missing link parameter' });
+        return res.json({ success: false, message: 'missing link parameter' });
     }
 
-    const link = req.query.link;
-    console.log(`shortening ${link} link`);
+    const slug = uniq(6);
+    const link = new Link(slug, req.query.link.toString());
 
-    // TODO: choose random slug
-    // TODO: persist slug in some DB
-    // TODO: return slug in JSON
+    console.log(`shortening ${link.link} link -> ${link.slug}`);
 
-    res.json({ success: true });
+    await insertLink(link);
+
+    console.log(`shortend ${link.link}`);
+
+    res.json({
+        success: true,
+        data: {
+            slug: link.slug,
+            link: link.link,
+        }
+    });
 });
+
+const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+function uniq(len: number) {
+    var result = '';
+    for (var i = 0; i < len; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
 module.exports = router;

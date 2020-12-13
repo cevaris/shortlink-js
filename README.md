@@ -13,4 +13,4 @@ localhost:3000/aaabbb
 
 
 npm install nodemon typescript @types/typescript --save-dev
-npm install express @types/express
+npm install aws-sdk express @types/express
