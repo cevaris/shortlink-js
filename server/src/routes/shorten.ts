@@ -9,6 +9,11 @@ router.post('/shorten', (req: express.Request, res: express.Response) => {
 
     const link = req.query.link;
     console.log(`shortening ${link} link`);
+
+    // TODO: choose random slug
+    // TODO: persist slug in some DB
+    // TODO: return slug in JSON
+
     res.json({ success: true });
 });
 

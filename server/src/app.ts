@@ -4,3 +4,4 @@ export const app = express();
 
 app.use(require('./routes/root'));
 app.use(require('./routes/shorten'));
+app.use(require('./routes/expand'));
