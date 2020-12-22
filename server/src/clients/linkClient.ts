@@ -1,5 +1,6 @@
 import { Link } from '../types';
 import { dynamoDb } from './dynamoDb';
+import { firebaseDb } from './firebase';
 
 export interface LinkClient {
     insert(link: Link): Promise<any>
@@ -48,38 +49,31 @@ class LinkDynamoDb implements LinkClient {
 
 }
 
-export const LinkClient = new LinkDynamoDb();
+class LinkFirestore implements LinkClient {
+    async insert(link: Link): Promise<any> {
+        const doc = firebaseDb.collection('links').doc(link.slug);
+        await doc.set({
+            slug: link.slug,
+            link: link.link,
+        });
+    }
 
+    async get(slug: string): Promise<Link> {
+        const query = firebaseDb.collection('links').doc(slug)
+        const doc = await query.get();
 
+        const data = doc?.data();
+        if (!data) {
+            return Promise.reject(Error(`link not found for slug=${slug}`));
+        }
 
-// export async function insertLink(link: Link) {
-//     const params = {
-//         TableName: 'shortlink',
-//         Item: {
-//             'key': { S: link.slug },
-//             'link': { S: link.link }
-//         }
-//     };
+        if (data.slug && data.link) {
+            return new Link(data.slug, data.link);
+        }
 
-//     const response = await dynamoDb.putItem(params).promise();
-//     return response;
-// }
+        return Promise.reject(Error(`link is missing data ${data}`));
+    }
 
-// export async function getLink(slug: string) {
-//     const params = {
-//         TableName: 'shortlink',
-//         Key: {
-//             'key': { S: slug },
-//         }
-//     };
+}
 
-//     const response = await dynamoDb.getItem(params).promise();
-
-//     const item = response.Item;
-
-//     if (item && item.key.S && item.link.S) {
-//         return new Link(item.key.S, item.link.S);
-//     } else {
-//         return Promise.reject(Error('failed to hydrate Link fields'));
-//     }
-// }
+export const linkClient = new LinkFirestore();

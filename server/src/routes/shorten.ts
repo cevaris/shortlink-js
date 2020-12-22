@@ -1,5 +1,5 @@
 import express from 'express';
-import { LinkClient } from '../clients/linkClient';
+import { linkClient } from '../clients/linkClient';
 import { Link } from '../types';
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     // TODO: error handling, duplicate slug
     // TODO: error handling 
-    await LinkClient.insert(link);
+    await linkClient.insert(link);
 
     res
         .status(200)

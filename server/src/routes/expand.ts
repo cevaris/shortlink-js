@@ -1,5 +1,5 @@
 import express from 'express';
-import { LinkClient } from '../clients/linkClient';
+import { linkClient } from '../clients/linkClient';
 
 const router = express.Router();
 
@@ -11,10 +11,10 @@ router.get('/expand.json', async (req: express.Request, res: express.Response) =
     const slug: string = req.query.slug.toString();
 
     try {
-        const link = await LinkClient.get(slug);
-        res.json({ slug: slug, data: link });
+        const link = await linkClient.get(slug);
+        res.json({ type: 'link', success: true, slug: link.slug, link: link.link });
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(404).json({ type: 'error', success: false, message: error.message });
     }
 
 });
