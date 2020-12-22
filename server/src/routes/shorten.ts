@@ -4,25 +4,26 @@ import { Link } from '../types';
 
 const router = express.Router();
 
-router.post('/shorten', async (req: express.Request, res: express.Response) => {
-    if (!req.query.link) {
-        return res.json({ success: false, message: 'missing link parameter' });
+router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
+    if (!req.body?.link) {
+        return res.status(400).json({ message: 'missing link body field.' });
     }
 
     const slug = uniq(6);
-    const link = new Link(slug, req.query.link.toString());
+    const link = new Link(slug, req.body?.link.toString());
 
     // TODO: error handling, duplicate slug
     // TODO: error handling 
     await insertLink(link);
 
-    res.json({
-        success: true,
-        data: {
-            slug: link.slug,
-            link: link.link,
-        }
-    });
+    res
+        .status(200)
+        .json({
+            data: {
+                slug: link.slug,
+                link: link.link,
+            }
+        });
 });
 
 const slugChars = '0123456789abcdefghijklmnopqrstuvwxyz';

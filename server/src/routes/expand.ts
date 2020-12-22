@@ -3,9 +3,9 @@ import { getLink } from '../clients/linkClient';
 
 const router = express.Router();
 
-router.get('/:slug', async (req: express.Request, res: express.Response) => {
+router.get('/:slug.json', async (req: express.Request, res: express.Response) => {
     const slug: string = req.params.slug;
-    
+
     // TODO: error handling
     const link = await getLink(slug);
 

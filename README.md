@@ -9,7 +9,7 @@ Typescript based link/URL shortener
 
 Shorten
 
-    curl -XPOST 'localhost:3000/shorten?link=http://google.com'
+    curl -XPOST localhost:3000/shorten.json -H "Content-Type: application/json" --data '{"link":"http://google.com"}'
 
 Expanding
 
@@ -20,4 +20,8 @@ Installs
     # dev packages
     npm install nodemon typescript @types/typescript --save-dev
     # packages
-    npm install aws-sdk express @types/express
+    npm install aws-sdk express @types/express body-parser
+
+Development
+
+    npm start dev
