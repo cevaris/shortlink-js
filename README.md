@@ -9,18 +9,18 @@ Typescript based link/URL shortener
 
 Shorten
 
-    curl -XPOST localhost:3000/shorten.json -H "Content-Type: application/json" --data '{"link":"http://google.com"}'
+    curl -i -XPOST localhost:3000/shorten.json -H "Content-Type: application/json" --data '{"link":"http://google.com"}'
 
 Expanding
 
-    curl 'localhost:3000/sgev27'
+    curl -i 'localhost:3000/expand.json?slug=4128ko'
 
 Installs
 
     # dev packages
     npm install nodemon typescript @types/typescript --save-dev
     # packages
-    npm install aws-sdk express @types/express body-parser
+    npm install express @types/express body-parser firebase-admin --save
 
 Development
 

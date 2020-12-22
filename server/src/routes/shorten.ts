@@ -1,12 +1,12 @@
 import express from 'express';
-import { insertLink } from '../clients/linkClient';
+import { LinkClient } from '../clients/linkClient';
 import { Link } from '../types';
 
 const router = express.Router();
 
 router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
     if (!req.body?.link) {
-        return res.status(400).json({ message: 'missing link body field.' });
+        return res.status(400).json({ message: 'missing link json body field.' });
     }
 
     const slug = uniq(6);
@@ -14,7 +14,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     // TODO: error handling, duplicate slug
     // TODO: error handling 
-    await insertLink(link);
+    await LinkClient.insert(link);
 
     res
         .status(200)
