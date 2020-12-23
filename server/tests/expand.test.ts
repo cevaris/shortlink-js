@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../src/app';
-import { LinkDb, linkDb } from '../src/storage/linkDb';
+import { linkDb } from '../src/storage/linkDb';
 import { Link } from '../src/types';
 
 let server: http.Server;
@@ -15,7 +15,7 @@ afterAll(async (done) => {
     server.close(done);
 });
 
-test('existing /expand.json returns 200', async () => {
+test('existing slug returns 200', async () => {
     const link = new Link('link', 'http://link.com', new Date());
 
     const spy = jest.spyOn(linkDb, 'get');
@@ -32,5 +32,13 @@ test('existing /expand.json returns 200', async () => {
             link: link.link,
             created_at: link.createdAt.toISOString(),
         }
-    })
+    });
+});
+
+test('missing slug param returns 400', async () => {
+    const resp = await request(server)
+        .get('/expand.json');
+
+    expect(resp.status).toBe(400);
+    expect(resp.body?.kind).toBe('error');
 });
