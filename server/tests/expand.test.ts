@@ -6,6 +6,7 @@ import { linkDb, StorageNotFoundError } from '../src/storage/linkDb';
 import { Link } from '../src/types';
 
 let server: http.Server;
+let spyLinkDb = jest.spyOn(linkDb, 'get');
 
 beforeAll((done) => {
     server = app.listen(done);
@@ -15,11 +16,13 @@ afterAll(async (done) => {
     server.close(done);
 });
 
+beforeEach(() => {
+    spyLinkDb.mockClear();
+})
+
 test('existing slug returns 200', async () => {
     const link = new Link('link', 'http://link.com', new Date());
-
-    const spy = jest.spyOn(linkDb, 'get');
-    spy.mockResolvedValue(link);
+    spyLinkDb.mockResolvedValue(link);
 
     const resp = await request(server)
         .get('/expand.json?slug=TEST');
@@ -46,8 +49,7 @@ test('missing slug param returns 400', async () => {
 test('if link does not exist returns 404', async () => {
     const testMessage = 'this is a test.';
     const storageNotFound = new StorageNotFoundError(testMessage);
-    const spy = jest.spyOn(linkDb, 'get');
-    spy.mockRejectedValue(storageNotFound);
+    spyLinkDb.mockRejectedValue(storageNotFound);
 
     const resp = await request(server)
         .get('/expand.json?slug=TEST');
@@ -59,10 +61,9 @@ test('if link does not exist returns 404', async () => {
     });
 });
 
-test('unexpected errror returns 503', async () => {
+test('unexpected error returns 503', async () => {
     const testMessage = 'this is a test.';
-    const spy = jest.spyOn(linkDb, 'get');
-    spy.mockRejectedValue(Error(testMessage));
+    spyLinkDb.mockRejectedValue(Error(testMessage));
 
     const resp = await request(server)
         .get('/expand.json?slug=TEST');
