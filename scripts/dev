@@ -7,7 +7,7 @@ trap "cd ${GIT_DIR}" err exit
 case $1 in
 frontend)
     cd frontend
-    npm run dev
+    npm run dev -- --open
     ;;
 backend)
     cd backend
