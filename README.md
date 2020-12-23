@@ -18,9 +18,9 @@ Expanding
 Installs
 
     # dev packages
-    npm install nodemon typescript @types/typescript --save-dev
+    npm install jest nodemon supertest ts-node ts-jest typescript @types/supertest @types/jest @types/typescript --save-dev
     # packages
-    npm install axios body-parser express firebase-admin @types/express --save
+    npm install axios express firebase-admin @types/express --save
 
 Development
 
