@@ -6,10 +6,10 @@ export interface LinkDb {
     get(slug: string): Promise<Link>
 }
 
-export class NotFoundError extends Error {
+export class StorageNotFoundError extends Error {
     constructor(message: string) {
         super(message);
-        Object.setPrototypeOf(this, NotFoundError.prototype);
+        Object.setPrototypeOf(this, StorageNotFoundError.prototype);
     }
 }
 
@@ -43,7 +43,7 @@ class LinkFirestore implements LinkDb {
 
         const data = doc?.data();
         if (!doc.exists || !data) {
-            throw new NotFoundError(`slug "${slug}" not found`);
+            throw new StorageNotFoundError(`slug "${slug}" not found`);
         }
 
         if (data.slug && data.link && data.created_at) {
