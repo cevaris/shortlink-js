@@ -27,10 +27,10 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
         }
     } catch (error) {
         return res
-            .status(503)
+            .status(500)
             .json({
                 kind: 'error',
-                message: `failed to resolve "${linkURL} for validation: ${error.message}".`
+                message: `failed to resolve "${linkURL}" for validation: ${error.message}.`
             });
     }
 

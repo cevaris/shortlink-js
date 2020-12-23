@@ -19,7 +19,7 @@ afterAll(async (done) => {
 });
 
 beforeEach(() => {
-    spyLinkDbInsert.mockClear();
+    jest.clearAllMocks();
 })
 
 test.skip('missing link json body field returns 400', async () => {
@@ -53,5 +53,24 @@ test('existing slug returns 200', async () => {
             link: link.link,
             created_at: link.createdAt.toISOString(),
         }
+    });
+});
+
+test('error when validating link returns 500', async () => {
+    const link = 'http://example.com';
+    const errorMessage = 'this is a test error';
+    spyHttpStatusGet.mockRejectedValue(Error(errorMessage));
+
+    const resp = await request(server)
+        .post('/shorten.json')
+        .send({ 'link': link });
+
+    expect(spyLinkDbInsert.mock.calls).toEqual([]);
+    expect(spyHttpStatusGet.mock.calls).toEqual([[link]]);
+
+    expect(resp.status).toBe(500);
+    expect(resp.body).toEqual({
+        kind: 'error',
+        message: `failed to resolve "${link}" for validation: ${errorMessage}.`,
     });
 });
