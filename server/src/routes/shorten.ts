@@ -1,4 +1,3 @@
-import axios from 'axios';
 import express from 'express';
 import { httpStatus } from '../http/status';
 import { LinkPresenter } from '../presenter';
@@ -37,7 +36,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     try {
         const link = await linkDb.insert(linkURL);
-        res
+        return res
             .status(200)
             .json({ kind: 'link', data: LinkPresenter.present(link) });
     } catch (error) {
