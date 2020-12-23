@@ -6,7 +6,7 @@ import { linkDb } from '../storage/linkDb';
 const router = express.Router();
 
 router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
-    const linkURL = req.body?.link.toString();
+    const linkURL = req.body?.link?.toString();
     if (!linkURL) {
         return res
             .status(400)
@@ -25,6 +25,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
                 .status(400)
                 .json({ kind: 'error', message: message });
         }
+        // link is valid
     } catch (error) {
         return res
             .status(500)
@@ -44,7 +45,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
             .status(503)
             .json({
                 kind: 'error',
-                message: `failed to persist link: ${error.message}.`,
+                message: `failed to create link: ${error.message}.`,
             });
     }
 });

@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, test } from '@jest/globals';
+import { afterEach, afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../src/app';
@@ -18,14 +18,13 @@ afterAll(async (done) => {
     server.close(done);
 });
 
-beforeEach(() => {
+afterEach(() => {
     jest.clearAllMocks();
 })
 
-test.skip('missing link json body field returns 400', async () => {
+test('missing link json body field returns 400', async () => {
     const resp = await request(server)
-        .post('/shorten.json')
-        .set({ 'Content-Type': 'application/json' });
+        .post('/shorten.json');
 
     expect(spyLinkDbInsert.mock.calls).toEqual([]);
     expect(spyHttpStatusGet.mock.calls).toEqual([]);
@@ -56,6 +55,27 @@ test('existing slug returns 200', async () => {
     });
 });
 
+test('link fails validation returns 400', async () => {
+    const link = 'http://example.com';
+
+    // mock http status returns 404/NotFound
+    spyHttpStatusGet.mockResolvedValue(404);
+
+    const resp = await request(server)
+        .post('/shorten.json')
+        .send({ 'link': link });
+
+    expect(spyLinkDbInsert.mock.calls).toEqual([]);
+    expect(spyHttpStatusGet.mock.calls).toEqual([[link]]);
+
+    expect(resp.status).toBe(400);
+    expect(resp.body).toEqual({
+        kind: 'error',
+        message: `link "${link}" failed validation, link returned 404 HTTP status code.`,
+    });
+});
+
+
 test('error when validating link returns 500', async () => {
     const link = 'http://example.com';
     const errorMessage = 'this is a test error';
@@ -72,5 +92,25 @@ test('error when validating link returns 500', async () => {
     expect(resp.body).toEqual({
         kind: 'error',
         message: `failed to resolve "${link}" for validation: ${errorMessage}.`,
+    });
+});
+
+test('failed to create link returns 503', async () => {
+    const link = 'http://example.com';
+    const errorMessage = 'this is a test error';
+    spyLinkDbInsert.mockRejectedValue(Error(errorMessage));
+    spyHttpStatusGet.mockResolvedValue(200);
+
+    const resp = await request(server)
+        .post('/shorten.json')
+        .send({ 'link': link });
+
+    expect(spyLinkDbInsert.mock.calls).toEqual([[link]]);
+    expect(spyHttpStatusGet.mock.calls).toEqual([[link]]);
+
+    expect(resp.status).toBe(503);
+    expect(resp.body).toStrictEqual({
+        kind: 'error',
+        message: `failed to create link: ${errorMessage}.`,
     });
 });
