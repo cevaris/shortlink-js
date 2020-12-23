@@ -1,6 +1,6 @@
 import axios from 'axios';
 import express from 'express';
-import { linkClient } from '../storage/linkClient';
+import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     }
 
     try {
-        const link = await linkClient.insert(linkURL);
+        const link = await linkDb.insert(linkURL);
         res
             .status(200)
             .json({ kind: 'link', data: { link: link.link, slug: link.slug } });

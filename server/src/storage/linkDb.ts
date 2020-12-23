@@ -1,12 +1,12 @@
 import { Link } from '../types';
 import { firebaseDb } from '../clients/firebase';
 
-export interface LinkClient {
+export interface LinkDb {
     insert(link: string): Promise<Link>
     get(slug: string): Promise<Link>
 }
 
-class LinkFirestore implements LinkClient {
+class LinkFirestore implements LinkDb {
     async insert(link: string): Promise<Link> {
         const slug = newSlug(6);
         const doc = firebaseDb.collection('links').doc(slug);
@@ -62,4 +62,4 @@ function newSlug(len: number) {
     // }
 }
 
-export const linkClient = new LinkFirestore();
+export const linkDb = new LinkFirestore();

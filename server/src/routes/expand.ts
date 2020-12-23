@@ -1,5 +1,5 @@
 import express from 'express';
-import { linkClient } from '../storage/linkClient';
+import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get('/expand.json', async (req: express.Request, res: express.Response) =
     const slug: string = req.query.slug.toString();
 
     try {
-        const link = await linkClient.get(slug);
+        const link = await linkDb.get(slug);
         res.json({ kind: 'link', data: { slug: link.slug, link: link.link } });
     } catch (error) {
         res.status(404).json({ kind: 'error', message: error.message });
