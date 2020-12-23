@@ -20,7 +20,7 @@ Installs
     # dev packages
     npm install nodemon typescript @types/typescript --save-dev
     # packages
-    npm install express @types/express body-parser firebase-admin --save
+    npm install axios body-parser express firebase-admin @types/express --save
 
 Development
 

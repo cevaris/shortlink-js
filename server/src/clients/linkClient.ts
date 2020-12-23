@@ -3,7 +3,7 @@ import { dynamoDb } from './dynamoDb';
 import { firebaseDb } from './firebase';
 
 export interface LinkClient {
-    insert(link: Link): Promise<any>
+    insert(link: Link): Promise<void>
     get(slug: string): Promise<Link>
 }
 
@@ -50,7 +50,7 @@ class LinkDynamoDb implements LinkClient {
 }
 
 class LinkFirestore implements LinkClient {
-    async insert(link: Link): Promise<any> {
+    async insert(link: Link): Promise<void> {
         const doc = firebaseDb.collection('links').doc(link.slug);
         await doc.set({
             slug: link.slug,
