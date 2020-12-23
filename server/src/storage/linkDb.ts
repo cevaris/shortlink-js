@@ -1,5 +1,5 @@
 import { Link } from '../types';
-import { firebaseDb } from '../clients/firebase';
+import { firebaseDb } from '../clients/firebaseClient';
 
 export interface LinkDb {
     insert(link: string): Promise<Link>
