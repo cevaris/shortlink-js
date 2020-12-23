@@ -5,16 +5,16 @@ cd ${GIT_DIR}
 trap "cd ${GIT_DIR}" err exit
 
 case $1 in
-app)
-    cd app
+frontend)
+    cd frontend
     npm run dev
     ;;
-server)
-    cd server
+backend)
+    cd backend
     npm run dev
     ;;
 *)
-    echo 'Invalid dev target {app|server}'
+    echo 'Invalid dev target {frontend|backend}'
     exit -1
     ;;
 esac
