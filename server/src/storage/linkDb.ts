@@ -10,14 +10,16 @@ class LinkFirestore implements LinkDb {
     async insert(link: string): Promise<Link> {
         const slug = newSlug(6);
         const doc = firebaseDb.collection('links').doc(slug);
+        const now = new Date();
 
         try {
             await doc.create({
                 slug: slug,
                 link: link,
+                created_at: now,
             });
 
-            return new Link(slug, link);
+            return new Link(slug, link, now);
         } catch (error) {
             if (error.code === 6) {
                 // Duplicate document, retry with different link
@@ -37,8 +39,9 @@ class LinkFirestore implements LinkDb {
             return Promise.reject(Error(`link not found for slug=${slug}`));
         }
 
-        if (data.slug && data.link) {
-            return new Link(data.slug, data.link);
+        console.log(data);
+        if (data.slug && data.link && data.created_at) {
+            return new Link(data.slug, data.link, data.created_at.toDate());
         }
 
         return Promise.reject(Error(`link is missing data ${data}`));

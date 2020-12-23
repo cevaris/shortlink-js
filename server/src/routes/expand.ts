@@ -1,4 +1,5 @@
 import express from 'express';
+import { LinkPresenter } from '../presenter';
 import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
@@ -12,7 +13,7 @@ router.get('/expand.json', async (req: express.Request, res: express.Response) =
 
     try {
         const link = await linkDb.get(slug);
-        res.json({ kind: 'link', data: { slug: link.slug, link: link.link } });
+        res.json({ kind: 'link', data: LinkPresenter.present(link) });
     } catch (error) {
         res.status(404).json({ kind: 'error', message: error.message });
     }

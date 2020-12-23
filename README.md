@@ -13,7 +13,7 @@ Shorten
 
 Expanding
 
-    curl -i 'localhost:3000/expand.json?slug=4128ko'
+    curl -i 'localhost:3000/expand.json?slug=p2xgE3'
 
 Installs
 
