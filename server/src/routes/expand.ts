@@ -1,6 +1,6 @@
 import express from 'express';
 import { LinkPresenter } from '../presenter';
-import { linkDb } from '../storage/linkDb';
+import { linkDb, NotFoundError as StorageNotFoundError } from '../storage/linkDb';
 
 const router = express.Router();
 
@@ -15,7 +15,11 @@ router.get('/expand.json', async (req: express.Request, res: express.Response) =
         const link = await linkDb.get(slug);
         res.json({ kind: 'link', data: LinkPresenter.present(link) });
     } catch (error) {
-        res.status(404).json({ kind: 'error', message: error.message });
+        if (error instanceof StorageNotFoundError) {
+            return res.status(404).json({ kind: 'error', message: error.message });
+        }
+
+        res.status(500).json({ kind: 'error', message: error.message });
     }
 });
 

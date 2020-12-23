@@ -6,6 +6,13 @@ export interface LinkDb {
     get(slug: string): Promise<Link>
 }
 
+export class NotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, NotFoundError.prototype);
+    }
+}
+
 class LinkFirestore implements LinkDb {
     async insert(link: string): Promise<Link> {
         const slug = newSlug(6);
@@ -35,15 +42,15 @@ class LinkFirestore implements LinkDb {
         const doc = await query.get();
 
         const data = doc?.data();
-        if (!data) {
-            return Promise.reject(Error(`link not found for slug=${slug}`));
+        if (!doc.exists || !data) {
+            throw new NotFoundError(`slug "${slug}" not found`);
         }
 
         if (data.slug && data.link && data.created_at) {
             return new Link(data.slug, data.link, data.created_at.toDate());
         }
 
-        return Promise.reject(Error(`link is missing data ${data}`));
+        throw Error(`link is missing data ${data}`);
     }
 }
 

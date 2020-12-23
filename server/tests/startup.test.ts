@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../src/app';
@@ -15,6 +16,9 @@ afterAll(async (done) => {
     server.close(done);
 });
 
-test('hello world', () => {
-    expect(true).toBe(true);
+test('root returns 200', async () => {
+    const resp = await request(server)
+        .get('/');
+
+    expect(resp.status).toBe(200);
 });
