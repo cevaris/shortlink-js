@@ -39,7 +39,6 @@ class LinkFirestore implements LinkDb {
             return Promise.reject(Error(`link not found for slug=${slug}`));
         }
 
-        console.log(data);
         if (data.slug && data.link && data.created_at) {
             return new Link(data.slug, data.link, data.created_at.toDate());
         }
