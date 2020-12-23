@@ -1,5 +1,6 @@
 import axios from 'axios';
 import express from 'express';
+import { httpStatus } from '../http/status';
 import { LinkPresenter } from '../presenter';
 import { linkDb } from '../storage/linkDb';
 
@@ -17,7 +18,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     }
 
     try {
-        const status = await httpStatus(linkURL);
+        const status = await httpStatus.get(linkURL);
         if (status >= 400) {
             const message =
                 `link "${linkURL}" failed validation, link returned ${status} HTTP status code.`
@@ -48,24 +49,5 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
             });
     }
 });
-
-// https://stackoverflow.com/questions/49967779/axios-handling-errors
-async function httpStatus(link: string): Promise<number> {
-    try {
-        const response = await axios.get(link);
-        return response.status;
-    } catch (error) {
-        if (error.response) {
-            // response returned failing HTTP status code
-            return error.response.status as number;
-        } else if (error.request) {
-            // no response
-            return 500;
-        } else {
-            // failed to make request
-            throw error
-        }
-    }
-}
 
 module.exports = router;
