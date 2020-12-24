@@ -1,5 +1,6 @@
 import { Link } from '../types';
 import { firebaseDb } from '../clients/firebaseClient';
+import { newSlug } from './slug';
 
 export interface LinkDb {
     insert(link: string): Promise<Link>
@@ -52,23 +53,6 @@ class LinkFirestore implements LinkDb {
 
         throw Error(`link is missing data ${data}`);
     }
-}
-
-
-// https://stackoverflow.com/a/1349426/3538289
-const SlugChars: string = '0123456789abcdefghijklmnopqrstuvwxyz';
-function newSlug(len: number) {
-    var result = '';
-    for (var i = 0; i < len; i++) {
-        result += SlugChars.charAt(Math.floor(Math.random() * SlugChars.length));
-    }
-
-    return result;
-    // if (Math.random() < 0.75) {
-    //     return "duplug";
-    // } else {
-    //     return result;
-    // }
 }
 
 export const linkDb = new LinkFirestore();
