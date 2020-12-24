@@ -11,16 +11,12 @@ class AxiosHttpStatus implements HttpStatus {
             return response.status;
         } catch (error) {
             // https://stackoverflow.com/questions/49967779/axios-handling-errors
-            if (error.response) {
+            if (error.response && error.response.status) {
                 // response returned failing HTTP status code
                 return error.response.status as number;
-            } else if (error.request) {
-                console.error(error);
-                // no response
-                return 500;
             } else {
                 // failed to make request
-                throw error
+                throw error;
             }
         }
     }

@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
-import { app } from '../src/app';
-import { linkDb, StorageNotFoundError } from '../src/storage/linkDb';
-import { Link } from '../src/types';
+import { app } from '../../src/app';
+import { linkDb, StorageNotFoundError } from '../../src/storage/linkDb';
+import { Link } from '../../src/types';
 
 let server: http.Server;
 let spyLinkDbGet = jest.spyOn(linkDb, 'get');

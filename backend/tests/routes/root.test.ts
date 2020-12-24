@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
-import { app } from '../src/app';
+import { app } from '../../src/app';
 
 let server: http.Server;
 
