@@ -2,7 +2,7 @@ import { afterEach, expect, test } from '@jest/globals';
 import axios from 'axios';
 import { httpStatus } from '../../src/http/status';
 
-let spyAxios = jest.spyOn(axios, 'get');
+const spyAxios = jest.spyOn(axios, 'get');
 
 afterEach(() => {
     jest.clearAllMocks();

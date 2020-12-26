@@ -21,11 +21,13 @@ class LinkFirestore implements LinkDb {
         const now = new Date();
 
         try {
-            await doc.create({
+            const response = await doc.create({
                 slug: slug,
                 link: link,
                 created_at: now,
             });
+
+            // console.log('doc create', response, response.writeTime);
 
             return new Link(slug, link, now);
         } catch (error) {
@@ -55,4 +57,4 @@ class LinkFirestore implements LinkDb {
     }
 }
 
-export const linkDb = new LinkFirestore();
+export const linkDb: LinkDb = new LinkFirestore();
