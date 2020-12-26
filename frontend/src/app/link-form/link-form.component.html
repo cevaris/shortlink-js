@@ -1,0 +1,19 @@
+<div class="container">
+    <div [hidden]="submitted">
+        <h1>Shorten a link</h1>
+        <form (ngSubmit)="onSubmit()" #linkForm="ngForm">
+            <div class="form-group">
+                <label for="link">Link</label>
+                <input type="text" class="form-control" id="link" required
+                    [(ngModel)]="model.link" name="link" #link="ngModel">
+                <div [hidden]="link.valid || link.pristine"
+                    class="alert alert-danger">
+                    Link is required
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success"
+                [disabled]="!linkForm.form.valid">Shorten</button>
+        </form>
+    </div>
+</div>
