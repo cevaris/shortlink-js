@@ -11,7 +11,7 @@ test('insert link successfully', async () => {
     const collection = jest
         .spyOn(firebaseDb, 'collection')
         .mockReturnValue((({ doc }) as any));
-    create.mockResolvedValue({} as FirebaseFirestore.WriteResult);
+    create.mockReturnValue({});
 
     const result = await linkDb.insert(link);
 
@@ -32,7 +32,7 @@ test('insert link to throw error on duplicate document', async () => {
     // mocks 2 duplicate code failures, then succeed
     create.mockRejectedValueOnce({ code: 6 });
     create.mockRejectedValueOnce({ code: 6 });
-    create.mockReturnValue({} as FirebaseFirestore.WriteResult);
+    create.mockReturnValue({});
 
     const result = await linkDb.insert(link);
 
