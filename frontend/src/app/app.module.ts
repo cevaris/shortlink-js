@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,8 +19,10 @@ import { LinkFormComponent } from './link-form/link-form.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatListModule,
+    MatInputModule,
     MatToolbarModule,
-    FormsModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
   ],
   providers: [],

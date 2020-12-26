@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-class LinkModel {
+interface LinkForm {
   link: string
-  slug: string
-  created_at: Date
 }
-
 
 @Component({
   selector: 'app-link-form',
@@ -14,22 +12,24 @@ class LinkModel {
 })
 export class LinkFormComponent implements OnInit {
 
+  public linkForm: FormGroup;
   submitted: boolean = false;
 
-  model: LinkModel = new LinkModel();
 
   constructor() {
+    this.linkForm = new FormGroup({
+      link: new FormControl('', [Validators.required]),
+    })
   }
 
   ngOnInit(): void {
   }
 
-  onSubmit() {
-    console.log('onSubmit called');
+  hasError(name: string, error: string) {
+    return this.linkForm.controls[name].hasError(error);
   }
 
-  newHero() {
-    console.log('newHero called');
+  onSubmit(data: LinkForm) {
+    console.log('onSubmit called', data);
   }
-
 }
