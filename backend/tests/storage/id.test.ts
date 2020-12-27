@@ -1,8 +1,8 @@
 import { newId } from "../../src/storage/id";
 
-test('valid length returns valid slug', () => {
-    const slug = newId(10);
-    expect(slug.length).toBe(10);
+test('valid length returns valid id', () => {
+    const id = newId(10);
+    expect(id.length).toBe(10);
 });
 
 test('invalid length throws error', () => {
@@ -11,7 +11,7 @@ test('invalid length throws error', () => {
         fail('should not have gotten here');
     } catch (error) {
         expect(error.message).toBe(
-            `invalid newSlug length "-10".`
+            `invalid newId length "-10".`
         );
     }
 });

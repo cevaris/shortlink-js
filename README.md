@@ -5,7 +5,7 @@ Typescript based link/URL shortener
 - Frontend (CLI) (Ionic)
 - HTTP API (Express)
 - KeyValue Database (AWS)
-  - slug -> url/link
+  - id -> url/link
 
 Shorten
 
@@ -13,7 +13,7 @@ Shorten
 
 Expanding
 
-    curl -s 'localhost:3000/expand.json?slug=b5wcgs' -H "Origin: http://localhost:4200" | jq .
+    curl -s 'localhost:3000/expand.json?id=b5wcgs' -H "Origin: http://localhost:4200" | jq .
 
 Installs
 
