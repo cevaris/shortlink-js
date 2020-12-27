@@ -1,3 +1,8 @@
+export enum ApiKind {
+    Link = 'link',
+    Error = 'error',
+}
+
 export interface ApiLink {
     createdAt: Date
     link: string

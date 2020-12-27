@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { ApiLink, ApiResponse } from './types';
+import { ApiKind, ApiLink, ApiResponse } from './types';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +19,18 @@ export class LinksService {
   }
 
   create(link: string): Observable<ApiLink> {
-    console.log('LinkService creating link', link);
     const data = { link: link };
     return this.http.post<ApiResponse<ApiLink>>(`${this.API_DOMAIN}/shorten.json`, data).pipe(
       map((response) => {
-        if (response.kind === 'link') {
+        if (response.kind === ApiKind.Link) {
           return response.data;
-        } else {
+        }
+
+        if (response.kind === ApiKind.Error) {
           throw new Error(response.message);
         }
+
+        throw new Error(`unexpected response ${response}`);
       }),
     );
   }

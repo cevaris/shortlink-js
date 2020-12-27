@@ -29,9 +29,11 @@ export class LinkFormComponent implements OnInit {
   }
 
   hasError(name: string, error: string) {
-    return this.linkForm.controls[name].hasError(error);
+    return this.linkForm.get(name).hasError(error);
   }
 
+  // https://juristr.com/blog/2019/02/display-server-side-validation-errors-with-angular/
+  // TODO: have API return field specific errors
   onSubmit(data: LinkForm): void {
     this.subscription = this.linkService.create(data.link)
       .subscribe(
@@ -40,7 +42,7 @@ export class LinkFormComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           console.error('link form error', error.error)
-          this.linkForm.controls['link'].setErrors({ error: error.error.message });
+          this.linkForm.get('link').setErrors({ error: error.error.message });
         },
       );
   }
