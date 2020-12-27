@@ -6,58 +6,46 @@ import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
 
+// TODO: extract to global, add ApiError type, update tests
+export function apiError(res: express.Response, code: number, field: string, message: string) {
+    res
+        .status(code)
+        .json({
+            error: { errors: [{ [field]: message }] },
+        });
+}
+
 router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
     const linkURL = req.body?.link?.toString();
     if (!linkURL) {
-        return res
-            .status(400)
-            .json({
-                kind: 'error',
-                message: 'missing "link" json body field.'
-            });
+        return apiError(res, 400, 'link', 'missing "link" json body field.');
     }
 
-    // TODO add tests
+    // TODO: add tests
     if (!isValidLink(linkURL)) {
-        return res
-            .status(400)
-            .json({
-                kind: 'error',
-                message: `link "${linkURL}" is a malformed URL.`
-            });
+        return apiError(res, 400, 'link', `link "${linkURL}" is a malformed URL.`);
     }
 
     try {
-        const status = await httpStatus.get(linkURL);
-        if (status >= 400) {
-            const message =
-                `link "${linkURL}" failed validation, link returned ${status} HTTP status code.`
-            return res
-                .status(400)
-                .json({ kind: 'error', message: message });
-        }
-        // link is valid
+        // verify that link resolves
+        await httpStatus.get(linkURL);
+        // if does not throw, the link resolved.
     } catch (error) {
-        return res
-            .status(500)
-            .json({
-                kind: 'error',
-                message: `failed to resolve "${linkURL}" for validation: ${error.message}.`
-            });
+        return apiError(res, 500, 'link', `link "${linkURL}" failed validation: ${error.message}.`);
     }
 
     try {
         const link = await linkDb.insert(linkURL);
         return res
             .status(200)
-            .json({ kind: 'link', data: LinkPresenter.present(link) });
-    } catch (error) {
-        return res
-            .status(503)
             .json({
-                kind: 'error',
-                message: `failed to create link: ${error.message}.`,
+                data: {
+                    kind: 'link',
+                    items: [LinkPresenter.present(link)]
+                }
             });
+    } catch (error) {
+        return apiError(res, 503, 'link', `failed to create link: ${error.message}.`);
     }
 });
 

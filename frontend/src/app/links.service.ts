@@ -12,8 +12,8 @@ export class LinksService {
 
   constructor(private http: HttpClient) { }
 
-  get(slug: string): Observable<ApiLink> {
-    return this.http.get<ApiLink>(`${this.API_DOMAIN}/expand.json?slug=${slug}`).pipe(
+  get(id: string): Observable<ApiLink> {
+    return this.http.get<ApiLink>(`${this.API_DOMAIN}/expand.json?id=${id}`).pipe(
       tap(response => console.log(`got link ${response}`)),
     )
   }

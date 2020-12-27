@@ -1,10 +1,10 @@
 import { Link } from '../types';
 import { firebaseDb } from '../clients/firebaseClient';
-import { newSlug } from './slug';
+import { newId } from './id';
 
 export interface LinkDb {
     insert(link: string): Promise<Link>
-    get(slug: string): Promise<Link>
+    get(id: string): Promise<Link>
 }
 
 export class StorageNotFoundError extends Error {
@@ -16,18 +16,18 @@ export class StorageNotFoundError extends Error {
 
 class LinkFirestore implements LinkDb {
     async insert(link: string): Promise<Link> {
-        const slug = newSlug(6);
-        const doc = firebaseDb.collection('links').doc(slug);
+        const id = newId(6);
+        const doc = firebaseDb.collection('links').doc(id);
         const now = new Date();
 
         try {
             await doc.create({
-                slug: slug,
+                id: id,
                 link: link,
                 created_at: now,
             });
 
-            return new Link(slug, link, now);
+            return new Link(id, link, now);
         } catch (error) {
             if (error.code === 6) {
                 // Duplicate document, retry with different link
@@ -38,17 +38,17 @@ class LinkFirestore implements LinkDb {
 
     }
 
-    async get(slug: string): Promise<Link> {
-        const query = firebaseDb.collection('links').doc(slug)
+    async get(id: string): Promise<Link> {
+        const query = firebaseDb.collection('links').doc(id)
         const doc = await query.get();
 
         const data = doc?.data();
         if (!doc.exists || !data) {
-            throw new StorageNotFoundError(`slug "${slug}" not found`);
+            throw new StorageNotFoundError(`id "${id}" not found`);
         }
 
-        if (data.slug && data.link && data.created_at) {
-            return new Link(data.slug, data.link, data.created_at.toDate());
+        if (data.id && data.link && data.created_at) {
+            return new Link(data.id, data.link, data.created_at.toDate());
         }
 
         throw Error(`link is missing data ${data}`);

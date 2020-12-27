@@ -1,10 +1,10 @@
 export class Link {
-    slug: string;
+    id: string;
     link: string;
     createdAt: Date;
 
-    constructor(slug: string, link: string, createdAt: Date) {
-        this.slug = slug;
+    constructor(id: string, link: string, createdAt: Date) {
+        this.id = id;
         this.link = link;
         this.createdAt = createdAt;
     }

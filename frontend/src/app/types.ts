@@ -4,9 +4,9 @@ export enum ApiKind {
 }
 
 export interface ApiLink {
+    id: string
     createdAt: Date
     link: string
-    slug: string
 }
 
 export interface ApiResponse<T> {

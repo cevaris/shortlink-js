@@ -9,11 +9,11 @@ Typescript based link/URL shortener
 
 Shorten
 
-    curl -XPOST localhost:3000/shorten.json -H "Origin: http://localhost:4200" -H "Content-Type: application/json" --data '{"link":"http://google.com"}'
+    curl -s -XPOST localhost:3000/shorten.json -H "Origin: http://localhost:4200"  -H "Content-Type: application/json" --data '{"link":"http://test.com"}' | jq .
 
 Expanding
 
-    curl -i 'localhost:3000/expand.json?slug=p2xgE3'
+    curl -s 'localhost:3000/expand.json?slug=b5wcgs' -H "Origin: http://localhost:4200" | jq .
 
 Installs
 

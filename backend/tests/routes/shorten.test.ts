@@ -32,7 +32,7 @@ test('missing link json body field returns 400', async () => {
     expect(resp.body?.kind).toBe('error');
 });
 
-test('existing slug returns 200', async () => {
+test('existing id returns 200', async () => {
     const link = new Link('link', 'http://link.com', new Date());
     spyLinkDbInsert.mockResolvedValue(link);
     spyHttpStatusGet.mockResolvedValue(200);
@@ -48,7 +48,7 @@ test('existing slug returns 200', async () => {
     expect(resp.body).toStrictEqual({
         kind: 'link',
         data: {
-            slug: link.slug,
+            id: link.id,
             link: link.link,
             created_at: link.createdAt.toISOString(),
         }

@@ -20,26 +20,26 @@ beforeEach(() => {
     spyLinkDbGet.mockClear();
 })
 
-test('existing slug returns 200', async () => {
+test('existing id returns 200', async () => {
     const link = new Link('TEST', 'http://link.com', new Date());
     spyLinkDbGet.mockResolvedValue(link);
 
     const resp = await request(server)
-        .get(`/expand.json?slug=${link.slug}`);
+        .get(`/expand.json?id=${link.id}`);
 
-    expect(spyLinkDbGet.mock.calls).toEqual([[link.slug]]);
+    expect(spyLinkDbGet.mock.calls).toEqual([[link.id]]);
     expect(resp.status).toBe(200);
     expect(resp.body).toStrictEqual({
         kind: 'link',
         data: {
-            slug: link.slug,
+            id: link.id,
             link: link.link,
             created_at: link.createdAt.toISOString(),
         }
     });
 });
 
-test('missing slug param returns 400', async () => {
+test('missing id param returns 400', async () => {
     const resp = await request(server)
         .get('/expand.json');
 
@@ -49,13 +49,13 @@ test('missing slug param returns 400', async () => {
 });
 
 test('if link does not exist returns 404', async () => {
-    const slug = 'TEST'
+    const id = 'TEST'
     const testMessage = 'this is a test.';
     const storageNotFound = new StorageNotFoundError(testMessage);
     spyLinkDbGet.mockRejectedValue(storageNotFound);
 
     const resp = await request(server)
-        .get(`/expand.json?slug=${slug}`);
+        .get(`/expand.json?id=${id}`);
 
     expect(spyLinkDbGet.mock.calls).toEqual([['TEST']]);
     expect(resp.status).toBe(404);
@@ -70,7 +70,7 @@ test('unexpected error returns 503', async () => {
     spyLinkDbGet.mockRejectedValue(Error(testMessage));
 
     const resp = await request(server)
-        .get('/expand.json?slug=TEST');
+        .get('/expand.json?id=TEST');
 
     expect(resp.status).toBe(503);
     expect(resp.body).toStrictEqual({

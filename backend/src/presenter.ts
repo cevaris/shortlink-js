@@ -1,7 +1,7 @@
 import { Link } from "./types";
 
 type ApiLink = {
-    slug: string
+    id: string
     link: string
     created_at: string
 }
@@ -9,7 +9,7 @@ type ApiLink = {
 export class LinkPresenter {
     static present(link: Link): ApiLink {
         return {
-            slug: link.slug,
+            id: link.id,
             link: link.link,
             created_at: link.createdAt.toISOString(),
         }
