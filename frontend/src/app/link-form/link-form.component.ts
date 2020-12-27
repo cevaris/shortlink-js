@@ -1,7 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { LinksService } from '../links.service';
 import { ApiLink } from '../types';
 
@@ -17,8 +17,7 @@ interface LinkForm {
 export class LinkFormComponent implements OnInit {
 
   public linkForm: FormGroup;
-  submitted: boolean = false;
-
+  private subscription: Subscription;
 
   constructor(private linkService: LinksService) {
     this.linkForm = new FormGroup({
@@ -33,19 +32,22 @@ export class LinkFormComponent implements OnInit {
     return this.linkForm.controls[name].hasError(error);
   }
 
-  onSubmit(data: LinkForm) {
-    console.log('onSubmit called', data);
-    this.linkService.create(data.link)
-      // .pipe(
-      //   tap((apiLink) => console.log('created', apiLink)),
-      //   catchError((error) => {
-      //     console.error('you got it', error);
-      //     return of({} as ApiLink);
-      //   })
-      // );
+  onSubmit(data: LinkForm): void {
+    this.subscription = this.linkService.create(data.link)
       .subscribe(
-        response => console.log('you got it', response),
-        error => console.error('you got it', error)
+        (response: ApiLink) => {
+          console.log('link form created', response)
+        },
+        (error: HttpErrorResponse) => {
+          console.error('link form error', error.error)
+          this.linkForm.controls['link'].setErrors({ error: error.error.message });
+        },
       );
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

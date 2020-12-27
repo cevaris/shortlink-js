@@ -1,9 +1,13 @@
 <form [formGroup]="linkForm" autocomplete="off" novalidate
-    (ngSubmit)="onSubmit(linkForm.value)" fxLayout="column wrap">
+    (ngSubmit)="onSubmit(linkForm.value)" fxLayout="column wrap"
+    fxLayoutGap="10px">
     <mat-form-field>
         <input matInput type="text" placeholder="Link to shorten"
             formControlName="link" id="link">
-        <mat-error *ngIf="hasError('link', 'required')">Link is required
+        <mat-error *ngIf="hasError('link', 'required')">Link is required.
+        </mat-error>
+        <mat-error *ngIf="hasError('link', 'error')">
+            {{linkForm.controls['link'].getError('error')}}
         </mat-error>
     </mat-form-field>
     <button mat-raised-button color="primary"

@@ -1,5 +1,6 @@
 import express from 'express';
 import { httpStatus } from '../http/status';
+import { isValidLink } from '../http/valid';
 import { LinkPresenter } from '../presenter';
 import { linkDb } from '../storage/linkDb';
 
@@ -13,6 +14,16 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
             .json({
                 kind: 'error',
                 message: 'missing "link" json body field.'
+            });
+    }
+
+    // TODO add tests
+    if (!isValidLink(linkURL)) {
+        return res
+            .status(400)
+            .json({
+                kind: 'error',
+                message: `link "${linkURL}" is a malformed URL.`
             });
     }
 
