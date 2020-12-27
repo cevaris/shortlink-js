@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { LinksService } from '../links.service';
+import { ApiLink } from '../types';
 
 interface LinkForm {
   link: string
@@ -16,7 +20,7 @@ export class LinkFormComponent implements OnInit {
   submitted: boolean = false;
 
 
-  constructor() {
+  constructor(private linkService: LinksService) {
     this.linkForm = new FormGroup({
       link: new FormControl('', [Validators.required]),
     })
@@ -31,5 +35,17 @@ export class LinkFormComponent implements OnInit {
 
   onSubmit(data: LinkForm) {
     console.log('onSubmit called', data);
+    this.linkService.create(data.link)
+      // .pipe(
+      //   tap((apiLink) => console.log('created', apiLink)),
+      //   catchError((error) => {
+      //     console.error('you got it', error);
+      //     return of({} as ApiLink);
+      //   })
+      // );
+      .subscribe(
+        response => console.log('you got it', response),
+        error => console.error('you got it', error)
+      );
   }
 }
