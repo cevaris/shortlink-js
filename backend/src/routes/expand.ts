@@ -1,4 +1,5 @@
 import express from 'express';
+import { apiError, apiErrors } from '../http/responses';
 import { LinkPresenter } from '../presenter';
 import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 
@@ -6,8 +7,7 @@ const router = express.Router();
 
 router.get('/expand.json', async (req: express.Request, res: express.Response) => {
     if (!req.query.id) {
-        return res.status(400)
-            .json({ kind: 'error', message: `missing "id" query parameter.` });
+        return apiErrors(res, 400, 'id', `missing "id" query parameter.`);
     }
 
     const id: string = req.query.id.toString();
@@ -18,12 +18,10 @@ router.get('/expand.json', async (req: express.Request, res: express.Response) =
             .json({ kind: 'link', data: LinkPresenter.present(link) });
     } catch (error) {
         if (error instanceof StorageNotFoundError) {
-            return res.status(404)
-                .json({ kind: 'error', message: error.message });
+            return apiErrors(res, 404, 'id', error.message);
         }
 
-        return res.status(503)
-            .json({ kind: 'error', message: error.message });
+        return apiError(res, 503, error.message);
     }
 });
 
