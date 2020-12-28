@@ -4,7 +4,7 @@ import { Link } from '../types';
 import { newId } from './id';
 
 export interface LinkDb {
-    insert(link: string): Promise<Link>
+    create(link: string): Promise<Link>
     get(id: string): Promise<Link>
 }
 
@@ -23,7 +23,7 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
-    async insert(link: string): Promise<Link> {
+    async create(link: string): Promise<Link> {
         const id = newId(6);
         const doc = firebaseDb.collection('links').doc(id);
         const now = new Date();
@@ -34,14 +34,14 @@ class LinkFirestore implements LinkDb {
                 link: link,
                 created_at: Timestamp.fromDate(now),
             };
-            throw Error('does this work?')
+            // throw Error('intentionally breaking database create.')
             await doc.create(record);
 
             return toLink(record);
         } catch (error) {
             if (error.code === 6) {
                 // Duplicate document, retry with different link
-                return await this.insert(link);
+                return await this.create(link);
             }
             throw error;
         }

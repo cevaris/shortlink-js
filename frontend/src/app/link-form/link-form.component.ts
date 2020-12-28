@@ -18,7 +18,9 @@ interface LinkForm {
 export class LinkFormComponent implements OnInit {
 
   public linkForm: FormGroup;
+  // string containing non-specific field form errors
   public formError: string;
+  // true if request is in progress
   public submitting: boolean = false;
   private subscription: Subscription;
 
@@ -36,9 +38,10 @@ export class LinkFormComponent implements OnInit {
   }
 
   // https://juristr.com/blog/2019/02/display-server-side-validation-errors-with-angular/
-  // TODO: have API return field specific errors
   onSubmit(data: LinkForm): void {
     this.submitting = true;
+    this.formError = ''; // reset previous error
+
     this.subscription = this.linkService.create(data.link)
       .pipe(
         finalize(() => this.submitting = false)
@@ -48,36 +51,13 @@ export class LinkFormComponent implements OnInit {
           console.log('link form created', response);
         },
         (httpError: HttpErrorResponse) => {
-          // console.log(httpError);
-
-          // console.error(httpError.error.error?.errors);
-          // console.error(Object.keys(httpError.error.error?.errors));
-          // Object.keys(httpError.error.error?.errors)
-          //   .forEach(field => {
-          //     console.log('got here', field);
-          //     this.linkForm.get(field)?.setErrors({
-          //       error: httpError.error.error?.errors
-          //     });
-          //   });
-
-
-          httpError.error.error?.errors.forEach((error) => {
-            console.error(error);
+          httpError.error.error?.errors.forEach((error: ApiError) => {
             if (error.locationType === ApiLocationType.Parameter && error.location) {
-              const apiError = error as ApiError;
-              this.linkForm.get(apiError.location).setErrors({ [apiError.reason]: error.message });
-            } else if (error.reason) {
-              const apiError = error as ApiError;
-              // console.log('setting', { [apiError.reason]: error.message });
-              // this.linkForm.setErrors({ [apiError.reason]: error.message });
-              this.formError = apiError.message;
-              console.error('error', this.formError);
+              this.linkForm.get(error.location).setErrors({ [error.reason]: error.message });
+            } else if (error.message) {
+              this.formError = error.message;
             }
           });
-
-          // console.error('link form error', error);
-
-          // this.linkForm.get('link').setErrors({ error: error.error.message });
         }
       );
   }

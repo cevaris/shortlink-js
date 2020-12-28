@@ -13,7 +13,7 @@ test('insert link successfully', async () => {
         .mockReturnValue((({ doc }) as any));
     create.mockReturnValue({});
 
-    const result = await linkDb.insert(link);
+    const result = await linkDb.create(link);
 
     expect(collection).toHaveBeenCalledWith('links');
     expect(doc).toHaveBeenCalled();
@@ -34,7 +34,7 @@ test('insert link to throw error on duplicate document', async () => {
     create.mockRejectedValueOnce({ code: 6 });
     create.mockReturnValue({});
 
-    const result = await linkDb.insert(link);
+    const result = await linkDb.create(link);
 
     expect(collection).toHaveBeenCalledWith('links');
     expect(doc).toHaveBeenCalled();
@@ -54,7 +54,7 @@ test('insert link to throw error', async () => {
     create.mockRejectedValue(new Error(message));
 
     try {
-        await linkDb.insert(link);
+        await linkDb.create(link);
         fail('call should have thrown');
     } catch (error) {
         expect(error.message).toBe(message);

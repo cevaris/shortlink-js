@@ -61,7 +61,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     }
 
     try {
-        const link = await linkDb.insert(linkURL);
+        const link = await linkDb.create(linkURL);
         return respond(res, {
             data: { kind: ApiKind.Link, items: [toApiLink(link)], }
         })
