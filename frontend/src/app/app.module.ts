@@ -9,15 +9,25 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LinkFormComponent } from './link-form/link-form.component';
+import { LinkViewComponent } from './link-view/link-view.component';
+
+
+const appRoutes: Routes = [
+  { path: 'links/:id', component: LinkViewComponent },
+  { path: '**', redirectTo: '/' },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     LinkFormComponent,
+    LinkViewComponent,
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     BrowserModule,
     FlexLayoutModule,
