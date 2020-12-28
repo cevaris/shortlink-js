@@ -1,17 +1,32 @@
 import { Link } from "./types";
 
-type ApiLink = {
+export interface ApiLink {
     id: string
     link: string
     created_at: string
 }
 
-export class LinkPresenter {
-    static present(link: Link): ApiLink {
-        return {
-            id: link.id,
-            link: link.link,
-            created_at: link.createdAt.toISOString(),
-        }
+export enum ApiKind {
+    Link = 'link',
+}
+
+export interface ApiResponse<T> {
+    data?: {
+        kind: string
+        items: [T]
+    }
+    error?: {
+        code: number
+        message?: string
+        errors?: {}
     }
 }
+
+export function presentLink(link: Link): ApiLink {
+    return {
+        id: link.id,
+        link: link.link,
+        created_at: link.createdAt.toISOString(),
+    }
+}
+

@@ -1,6 +1,6 @@
 import express from 'express';
-import { apiError } from '../http/responses';
-import { LinkPresenter } from '../presenter';
+import { respond } from '../http/responses';
+import { ApiKind, presentLink } from '../presenter';
 import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 
 const router = express.Router();
@@ -10,19 +10,23 @@ router.get('/expand/:id.json', async (req: express.Request, res: express.Respons
 
     try {
         const link = await linkDb.get(id);
-        return res.status(200)
-            .json({
-                data: {
-                    kind: 'link',
-                    items: [LinkPresenter.present(link)],
-                }
-            });
+        return respond(res, {
+            data: {
+                kind: ApiKind.Link,
+                items: [presentLink(link)],
+            }
+        })
     } catch (error) {
         if (error instanceof StorageNotFoundError) {
-            return apiError(res, 404, error.message);
+            return respond(res, {
+                error: { code: 404, message: error.message, }
+            })
         }
 
-        return apiError(res, 503, error.message);
+        // return apiError(res, 503, error.message);
+        return respond(res, {
+            error: { code: 503, message: error.message, }
+        })
     }
 });
 

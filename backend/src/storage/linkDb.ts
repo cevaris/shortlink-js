@@ -8,18 +8,18 @@ export interface LinkDb {
     get(id: string): Promise<Link>
 }
 
-// internal firestore representation of Link 
-interface LinkRecord {
-    id: string
-    link: string
-    created_at: Timestamp
-}
-
 export class StorageNotFoundError extends Error {
     constructor(message: string) {
         super(message);
         Object.setPrototypeOf(this, StorageNotFoundError.prototype);
     }
+}
+
+// internal firestore representation of Link 
+interface LinkRecord {
+    id: string
+    link: string
+    created_at: Timestamp
 }
 
 class LinkFirestore implements LinkDb {
