@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { LinksService } from '../links.service';
+import { ApiLink } from '../types';
 
 @Component({
   selector: 'app-link-view',
@@ -7,9 +11,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LinkViewComponent implements OnInit {
 
-  constructor() { }
+  public link$: Observable<ApiLink>;
+  public subscription: Subscription;
+
+  constructor(private linkService: LinksService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.link$ = this.linkService.get(id);
+    this.subscription = this.link$.subscribe();
   }
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 }

@@ -1,7 +1,14 @@
 <div fxLayout="row">
     <div fxFlex="30"></div>
     <div fxFlex="30">
-        <p>link-view works!</p>
+        <div *ngIf="link$ | async as link">
+            Link: {{link.link}}
+            <br />
+            Id: {{link.id}}
+            <br />
+            CreatedAt: {{link.created_at}}
+            <br />
+        </div>
     </div>
     <div fxFlex hide-sm hide-xs></div>
 </div>

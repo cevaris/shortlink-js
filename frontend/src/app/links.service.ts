@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { ApiKind, ApiLink, ApiResponse } from './types';
+import { ApiLink, ApiResponse } from './types';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,18 @@ export class LinksService {
   constructor(private http: HttpClient) { }
 
   get(id: string): Observable<ApiLink> {
-    return this.http.get<ApiLink>(`${this.API_DOMAIN}/expand.json?id=${id}`).pipe(
-      tap(response => console.log(`got link ${response}`)),
+    return this.http.get<ApiResponse<ApiLink>>(`${this.API_DOMAIN}/expand/${id}.json`).pipe(
+      map((response) => {
+        if (response.data && response.data?.items.length > 0) {
+          return response.data.items[0];
+        }
+
+        if (response.error) {
+          throw response.error;
+        }
+
+        throw new Error(`unexpected response ${response}`);
+      })
     )
   }
 
