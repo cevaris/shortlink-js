@@ -11,13 +11,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-import { LinkFormComponent } from './link-form/link-form.component';
+import { LinkCreateComponent } from './link-create/link-create.component';
+import { LinkFormComponent } from './link-create/link-form/link-form.component';
 import { LinkViewComponent } from './link-view/link-view.component';
 
 
 const appRoutes: Routes = [
+  { path: 'links/', component: LinkCreateComponent },
   { path: 'links/:id', component: LinkViewComponent },
-  { path: '**', redirectTo: '/' },
+  { path: '**', redirectTo: 'links/' },
 ];
 
 @NgModule({
@@ -25,6 +27,7 @@ const appRoutes: Routes = [
     AppComponent,
     LinkFormComponent,
     LinkViewComponent,
+    LinkCreateComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes),

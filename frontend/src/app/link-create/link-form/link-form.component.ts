@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { LinksService } from '../links.service';
-import { ApiError, ApiLink, ApiLocationType } from '../types';
+import { LinksService } from '../../links.service';
+import { ApiError, ApiLink, ApiLocationType } from '../../types';
 
 interface LinkForm {
   link: string
