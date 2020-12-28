@@ -1,6 +1,6 @@
 import express from 'express';
+import { ApiKind, ApiLink, ApiReason, toApiLink } from '../api';
 import { respond } from '../http/responses';
-import { ApiKind, toApiLink } from '../api';
 import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get('/expand/:id.json', async (req: express.Request, res: express.Respons
 
     try {
         const link = await linkDb.get(id);
-        return respond(res, {
+        return respond<ApiLink>(res, {
             data: {
                 kind: ApiKind.Link,
                 items: [toApiLink(link)],
@@ -18,15 +18,29 @@ router.get('/expand/:id.json', async (req: express.Request, res: express.Respons
         })
     } catch (error) {
         if (error instanceof StorageNotFoundError) {
+            const message = `link "${id}" not found`;
             return respond(res, {
-                error: { code: 404, message: error.message, }
-            })
+                error: {
+                    code: 404,
+                    message: message,
+                    errors: [{
+                        reason: ApiReason.NotFound,
+                        message: message,
+                    }]
+                }
+            });
         }
 
-        // return apiError(res, 503, error.message);
         return respond(res, {
-            error: { code: 503, message: error.message, }
-        })
+            error: {
+                code: 503,
+                message: error.message,
+                errors: [{
+                    reason: ApiReason.Error,
+                    message: error.message,
+                }]
+            }
+        });
     }
 });
 

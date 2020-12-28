@@ -2,7 +2,7 @@ import express from 'express';
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
-import { ApiKind, toApiLink } from '../api';
+import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
@@ -10,21 +10,34 @@ const router = express.Router();
 router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
     const linkURL = req.body?.link?.toString();
     if (!linkURL) {
-        // return apiErrors(res, 400, 'link', 'missing "link" json body field.');
+        const message = 'missing "link" json body field.';
         return respond(res, {
             error: {
                 code: 400,
-                errors: { link: 'missing "link" json body field.', }
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Link,
+                    message: message,
+                }]
             }
         });
     }
 
     // TODO: add tests
     if (!isValidLink(linkURL)) {
+        const message = `link "${linkURL}" is a malformed URL.`;
         return respond(res, {
             error: {
                 code: 400,
-                errors: { link: `link "${linkURL}" is a malformed URL.`, }
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Link,
+                    message: message,
+                }]
             }
         });
     }
@@ -34,10 +47,15 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
         await httpStatus.get(linkURL);
         // if does not throw, the link resolved.
     } catch (error) {
+        const message = `server failed to validate "${linkURL} link": ${error.message}.`;
         return respond(res, {
             error: {
                 code: 500,
-                errors: { link: `link "${linkURL}" failed validation: ${error.message}.`, }
+                message: message,
+                errors: [{
+                    reason: ApiReason.Error,
+                    message: message,
+                }]
             }
         });
     }
@@ -48,10 +66,15 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
             data: { kind: ApiKind.Link, items: [toApiLink(link)], }
         })
     } catch (error) {
+        const message = `failed to create link: ${error.message}.`;
         return respond(res, {
             error: {
                 code: 503,
-                errors: { link: `failed to create link: ${error.message}.`, }
+                message: message,
+                errors: [{
+                    reason: ApiReason.Error,
+                    message: `link "${linkURL}" is a malformed URL.`,
+                }]
             }
         });
     }

@@ -38,11 +38,30 @@ export class LinkFormComponent implements OnInit {
     this.subscription = this.linkService.create(data.link)
       .subscribe(
         (response: ApiLink) => {
-          console.log('link form created', response)
+          console.log('link form created', response);
         },
-        (error: HttpErrorResponse) => {
-          console.error('link form error', error.error)
-          this.linkForm.get('link').setErrors({ error: error.error.message });
+        (httpError: HttpErrorResponse) => {
+          // console.log(httpError);
+
+          // console.error(httpError.error.error?.errors);
+          // console.error(Object.keys(httpError.error.error?.errors));
+          // Object.keys(httpError.error.error?.errors)
+          //   .forEach(field => {
+          //     console.log('got here', field);
+          //     this.linkForm.get(field)?.setErrors({
+          //       error: httpError.error.error?.errors
+          //     });
+          //   });
+
+
+          httpError.error.error?.errors.forEach((error) => {
+            console.error(error);
+            // this.linkForm.get(error.field).setErrors({ error: error.message });
+          });
+
+          // console.error('link form error', error);
+
+          // this.linkForm.get('link').setErrors({ error: error.error.message });
         },
       );
   }

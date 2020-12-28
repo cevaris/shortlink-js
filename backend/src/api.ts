@@ -10,15 +10,37 @@ export enum ApiKind {
     Link = 'link',
 }
 
+export enum ApiLocation {
+    Link = 'link',
+}
+
+export enum ApiLocationType {
+    Parameter = 'parameter',
+}
+
+export enum ApiReason {
+    Error = 'error',
+    Invalid = 'invalid',
+    NotFound = 'NotFound',
+    Required = 'required',
+}
+
+export interface ApiError {
+    reason: ApiReason
+    message: string
+    locationType?: ApiLocationType,
+    location?: ApiLocation
+}
+
 export interface ApiResponse<T> {
     data?: {
-        kind: string
+        kind: ApiKind
         items: [T]
     }
     error?: {
         code: number
-        message?: string
-        errors?: {}
+        message: string
+        errors: [ApiError]
     }
 }
 

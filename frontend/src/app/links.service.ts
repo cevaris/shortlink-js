@@ -22,12 +22,14 @@ export class LinksService {
     const data = { link: link };
     return this.http.post<ApiResponse<ApiLink>>(`${this.API_DOMAIN}/shorten.json`, data).pipe(
       map((response) => {
-        if (response.kind === ApiKind.Link) {
-          return response.data;
+        if (response.data) {
+          if (response.data?.kind === ApiKind.Link && response.data?.items.length > 0) {
+            return response.data.items[0];
+          }
         }
 
-        if (response.kind === ApiKind.Error) {
-          throw new Error(response.message);
+        if (response.error) {
+          throw response.error;
         }
 
         throw new Error(`unexpected response ${response}`);
