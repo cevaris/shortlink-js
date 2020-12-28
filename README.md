@@ -13,7 +13,7 @@ Shorten
 
 Expanding
 
-    curl -s 'localhost:3000/expand.json?id=b5wcgs' -H "Origin: http://localhost:4200" | jq .
+     curl -s 'localhost:3000/expand/l1nddj.json' -H "Origin: http://localhost:4200" | jq .
 
 Installs
 

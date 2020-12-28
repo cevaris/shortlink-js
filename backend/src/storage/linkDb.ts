@@ -44,7 +44,7 @@ class LinkFirestore implements LinkDb {
 
         const data = doc?.data();
         if (!doc.exists || !data) {
-            throw new StorageNotFoundError(`id "${id}" not found`);
+            throw new StorageNotFoundError(`link id "${id}" not found`);
         }
 
         if (data.id && data.link && data.created_at) {
