@@ -2,7 +2,7 @@ import express from 'express';
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
-import { ApiKind, presentLink } from '../presenter';
+import { ApiKind, toApiLink } from '../api';
 import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
@@ -45,7 +45,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     try {
         const link = await linkDb.insert(linkURL);
         return respond(res, {
-            data: { kind: ApiKind.Link, items: [presentLink(link)], }
+            data: { kind: ApiKind.Link, items: [toApiLink(link)], }
         })
     } catch (error) {
         return respond(res, {

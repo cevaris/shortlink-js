@@ -16,7 +16,7 @@ export class StorageNotFoundError extends Error {
 }
 
 // internal firestore representation of Link 
-interface LinkRecord {
+interface RecordLink {
     id: string
     link: string
     created_at: Timestamp
@@ -29,7 +29,7 @@ class LinkFirestore implements LinkDb {
         const now = new Date();
 
         try {
-            const record: LinkRecord = {
+            const record: RecordLink = {
                 id: id,
                 link: link,
                 created_at: Timestamp.fromDate(now),
@@ -55,7 +55,7 @@ class LinkFirestore implements LinkDb {
             throw new StorageNotFoundError(`link id "${id}" not found`);
         }
 
-        const record = doc.data() as LinkRecord;
+        const record = doc.data() as RecordLink;
 
         if (record.id && record.link && record.created_at) {
             return toLink(record);
@@ -65,7 +65,7 @@ class LinkFirestore implements LinkDb {
     }
 }
 
-function toLink(record: LinkRecord): Link {
+function toLink(record: RecordLink): Link {
     return {
         id: record.id,
         link: record.link,

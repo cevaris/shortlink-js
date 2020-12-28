@@ -22,7 +22,7 @@ export interface ApiResponse<T> {
     }
 }
 
-export function presentLink(link: Link): ApiLink {
+export function toApiLink(link: Link): ApiLink {
     return {
         id: link.id,
         link: link.link,

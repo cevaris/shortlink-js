@@ -1,6 +1,6 @@
 import express from 'express';
 import { respond } from '../http/responses';
-import { ApiKind, presentLink } from '../presenter';
+import { ApiKind, toApiLink } from '../api';
 import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.get('/expand/:id.json', async (req: express.Request, res: express.Respons
         return respond(res, {
             data: {
                 kind: ApiKind.Link,
-                items: [presentLink(link)],
+                items: [toApiLink(link)],
             }
         })
     } catch (error) {

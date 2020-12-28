@@ -1,5 +1,5 @@
 import express from 'express';
-import { ApiLink, ApiResponse } from '../presenter';
+import { ApiLink, ApiResponse } from '../api';
 
 // TODO: add ApiError type, update tests
 // export function apiError(res: express.Response, code: number, message: string) {
