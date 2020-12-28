@@ -1,10 +1,18 @@
-import { Link } from '../types';
 import { firebaseDb } from '../clients/firebaseClient';
+import { Timestamp } from "@google-cloud/firestore";
+import { Link } from '../types';
 import { newId } from './id';
 
 export interface LinkDb {
     insert(link: string): Promise<Link>
     get(id: string): Promise<Link>
+}
+
+// internal firestore representation of Link 
+interface LinkRecord {
+    id: string
+    link: string
+    created_at: Timestamp
 }
 
 export class StorageNotFoundError extends Error {
@@ -21,13 +29,14 @@ class LinkFirestore implements LinkDb {
         const now = new Date();
 
         try {
-            await doc.create({
+            const record: LinkRecord = {
                 id: id,
                 link: link,
-                created_at: now,
-            });
+                created_at: Timestamp.fromDate(now),
+            };
+            await doc.create(record);
 
-            return new Link(id, link, now);
+            return toLink(record);
         } catch (error) {
             if (error.code === 6) {
                 // Duplicate document, retry with different link
@@ -42,16 +51,25 @@ class LinkFirestore implements LinkDb {
         const query = firebaseDb.collection('links').doc(id)
         const doc = await query.get();
 
-        const data = doc?.data();
-        if (!doc.exists || !data) {
+        if (!doc.exists || !doc.data()) {
             throw new StorageNotFoundError(`link id "${id}" not found`);
         }
 
-        if (data.id && data.link && data.created_at) {
-            return new Link(data.id, data.link, data.created_at.toDate());
+        const record = doc.data() as LinkRecord;
+
+        if (record.id && record.link && record.created_at) {
+            return toLink(record);
         }
 
-        throw Error(`link is missing data ${data}`);
+        throw Error(`link is missing data ${record}`);
+    }
+}
+
+function toLink(record: LinkRecord): Link {
+    return {
+        id: record.id,
+        link: record.link,
+        createdAt: record.created_at.toDate(),
     }
 }
 
