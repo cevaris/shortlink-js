@@ -27,7 +27,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     // TODO: add tests
     if (!isValidLink(linkURL)) {
-        const message = `link "${linkURL}" is a malformed URL.`;
+        const message = `link "${linkURL}" is not a valid URL.`;
         return respond(res, {
             error: {
                 code: 400,
@@ -73,7 +73,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
                 message: message,
                 errors: [{
                     reason: ApiReason.Error,
-                    message: `link "${linkURL}" is a malformed URL.`,
+                    message: message,
                 }]
             }
         });

@@ -6,10 +6,14 @@
             formControlName="link" id="link">
         <mat-error *ngIf="hasError('link', 'required')">Link is required.
         </mat-error>
-        <mat-error *ngIf="hasError('link', 'error')">
-            {{linkForm.controls['link'].getError('error')}}
+        <mat-error *ngIf="hasError('link', 'invalid')">
+            {{linkForm.controls['link'].getError('invalid')}}
         </mat-error>
     </mat-form-field>
+
+    <mat-error *ngIf="formError">
+        {{formError}}
+    </mat-error>
     <button mat-raised-button color="primary"
-        [disabled]="!linkForm.valid">Shorten</button>
+        [disabled]="!linkForm.valid || submitting">Shorten</button>
 </form>

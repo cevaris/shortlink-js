@@ -2,8 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { LinksService } from '../links.service';
-import { ApiLink } from '../types';
+import { ApiError, ApiLink, ApiLocationType } from '../types';
 
 interface LinkForm {
   link: string
@@ -17,6 +18,8 @@ interface LinkForm {
 export class LinkFormComponent implements OnInit {
 
   public linkForm: FormGroup;
+  public formError: string;
+  public submitting: boolean = false;
   private subscription: Subscription;
 
   constructor(private linkService: LinksService) {
@@ -35,7 +38,11 @@ export class LinkFormComponent implements OnInit {
   // https://juristr.com/blog/2019/02/display-server-side-validation-errors-with-angular/
   // TODO: have API return field specific errors
   onSubmit(data: LinkForm): void {
+    this.submitting = true;
     this.subscription = this.linkService.create(data.link)
+      .pipe(
+        finalize(() => this.submitting = false)
+      )
       .subscribe(
         (response: ApiLink) => {
           console.log('link form created', response);
@@ -56,13 +63,22 @@ export class LinkFormComponent implements OnInit {
 
           httpError.error.error?.errors.forEach((error) => {
             console.error(error);
-            // this.linkForm.get(error.field).setErrors({ error: error.message });
+            if (error.locationType === ApiLocationType.Parameter && error.location) {
+              const apiError = error as ApiError;
+              this.linkForm.get(apiError.location).setErrors({ [apiError.reason]: error.message });
+            } else if (error.reason) {
+              const apiError = error as ApiError;
+              // console.log('setting', { [apiError.reason]: error.message });
+              // this.linkForm.setErrors({ [apiError.reason]: error.message });
+              this.formError = apiError.message;
+              console.error('error', this.formError);
+            }
           });
 
           // console.error('link form error', error);
 
           // this.linkForm.get('link').setErrors({ error: error.error.message });
-        },
+        }
       );
   }
 

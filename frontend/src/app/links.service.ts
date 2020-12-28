@@ -19,13 +19,11 @@ export class LinksService {
   }
 
   create(link: string): Observable<ApiLink> {
-    const data = { link: link };
-    return this.http.post<ApiResponse<ApiLink>>(`${this.API_DOMAIN}/shorten.json`, data).pipe(
+    const body = { link: link };
+    return this.http.post<ApiResponse<ApiLink>>(`${this.API_DOMAIN}/shorten.json`, body).pipe(
       map((response) => {
-        if (response.data) {
-          if (response.data?.kind === ApiKind.Link && response.data?.items.length > 0) {
-            return response.data.items[0];
-          }
+        if (response.data && response.data?.items.length > 0) {
+          return response.data.items[0];
         }
 
         if (response.error) {

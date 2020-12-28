@@ -34,6 +34,7 @@ class LinkFirestore implements LinkDb {
                 link: link,
                 created_at: Timestamp.fromDate(now),
             };
+            throw Error('does this work?')
             await doc.create(record);
 
             return toLink(record);
