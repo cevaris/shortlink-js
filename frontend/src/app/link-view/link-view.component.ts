@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -15,6 +16,7 @@ export class LinkViewComponent implements OnInit {
   public link$: Observable<ApiLink>;
   public subscription: Subscription;
   public loading: boolean = true;
+  public loadingError: string;
 
   constructor(private linkService: LinksService, private route: ActivatedRoute) { }
 
@@ -23,7 +25,12 @@ export class LinkViewComponent implements OnInit {
     this.link$ = this.linkService.get(id).pipe(
       finalize(() => this.loading = false)
     );
-    this.subscription = this.link$.subscribe();
+    this.subscription = this.link$.subscribe(
+      () => { },
+      (error: HttpErrorResponse) => {
+        this.loadingError = error.error.error.message;
+      }
+    );
   }
 
   ngOnDestroy(): void {
