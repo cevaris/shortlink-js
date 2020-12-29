@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiLink } from '../types';
 
 @Component({
   selector: 'app-link-create',
@@ -12,7 +13,7 @@ export class LinkCreateComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onLinkId(linkId: string) {
-    console.log('parent received linkId', linkId);
+  onLinkCreate(link: ApiLink) {
+    console.log('parent received linkId', link);
   }
 }

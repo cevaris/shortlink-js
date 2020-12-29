@@ -24,7 +24,8 @@ export class LinkFormComponent implements OnInit {
   public submitting: boolean = false;
   private subscription: Subscription;
 
-  @Output() linkId = new EventEmitter<string>();
+  // https://angular.io/guide/component-interaction#parent-listens-for-child-event
+  @Output() private linkEmitter = new EventEmitter<ApiLink>();
 
   constructor(private linkService: LinksService) {
     this.linkForm = new FormGroup({
@@ -51,7 +52,7 @@ export class LinkFormComponent implements OnInit {
       .subscribe(
         (response: ApiLink) => {
           console.log('link form created', response);
-          this.linkId.emit(response.id);
+          this.linkEmitter.emit(response);
         },
         (httpError: HttpErrorResponse) => {
           httpError.error.error?.errors.forEach((error: ApiError) => {
