@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { LinksService } from '../links.service';
-import { ApiLink } from '../types';
+import { ApiError, ApiLink } from '../types';
 
 @Component({
   selector: 'app-link-view',
@@ -31,9 +31,9 @@ export class LinkViewComponent implements OnInit {
     this.subscription = this.link$.subscribe(
       () => { },
       (error: HttpErrorResponse) => {
-        // this.loadingError = error.error.error.message;
-        if (error.error.error?.message) {
-          this.renderSnackbar(error.error.error?.message);
+        const apiError = error.error.error as ApiError;
+        if (apiError && apiError.message) {
+          this.renderSnackbar(apiError.message);
         } else {
           this.renderSnackbar(error.message);
         }
