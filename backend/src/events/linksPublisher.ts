@@ -1,20 +1,20 @@
 import { Topic } from "@google-cloud/pubsub";
 import { pubSubClient } from "../clients/pubsubClient";
-import { EventLink, EventMessage, EventType, Link } from "../types";
+import { com } from "../proto/gen";
+import { Link } from "../types";
 
 export interface LinkPublisher {
-    publishCreateEvent(event: EventLink): Promise<void>
+    publishCreateEvent(event: com.company.links.LinkCreateEvent): Promise<void>
 }
 
-export function toEvent(link: Link): EventMessage<EventLink> {
-    return {
-        type: EventType.Create,
-        data: {
+export function toLinkCreateEvent(link: Link): com.company.links.LinkCreateEvent {
+    return com.company.links.LinkCreateEvent.create({
+        link: com.company.links.Link.create({
             id: link.id,
             link: link.link,
-            created_at_ms: link.createdAt.getTime(),
-        }
-    }
+            createdAtMs: link.createdAt.getTime(),
+        }),
+    });
 }
 
 class GooglePubSubLinkPublisher implements LinkPublisher {
@@ -24,8 +24,8 @@ class GooglePubSubLinkPublisher implements LinkPublisher {
         this.publisher = pubSubClient.topic('link_events_prod');
     }
 
-    async publishCreateEvent(event: EventLink): Promise<void> {
-        const messageId = await this.publisher.publishJSON(event);
+    async publishCreateEvent(event: com.company.links.LinkCreateEvent): Promise<void> {
+        const messageId = await this.publisher.publishJSON(event.toJSON());
         console.log('published', messageId);
     }
 }

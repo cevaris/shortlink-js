@@ -1,0 +1,22 @@
+// https://developers.google.com/protocol-buffers/docs/style
+syntax = "proto3";
+
+package com.company.links;
+
+message Link {
+    string id = 1;
+    string link = 2;
+    int64 created_at_ms = 3;
+}
+
+message LinkCreateEvent {
+    Link link = 1;
+}
+
+message LinkEvent {
+    oneof event {
+        LinkCreateEvent link_create_event = 1;
+        // LinkDeleteEvent link_delete_event = 1;
+        // LinkModifyEvent link_modify_event = 1;
+    }
+}

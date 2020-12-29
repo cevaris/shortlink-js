@@ -24,4 +24,9 @@ Installs
 
 Development
 
-    npm start dev
+    # generate proto buf
+    ./scripts/proto-gen backend/src/proto
+
+    # start backend and frontend server
+    ./scripts/backend npm run dev
+    ./scripts/frontend npm run dev
