@@ -1,8 +1,11 @@
 <div fxLayout="row">
     <div fxFlex="30"></div>
     <div fxFlex="30">
+        <div *ngIf="loading" fxLayoutAlign="center">
+            <mat-spinner></mat-spinner>
+        </div>
         <div *ngIf="link$ | async as link">
-            Link: {{link.link}}
+            Link: <a href="{{link.link}}">{{link.link}}</a>
             <br />
             Id: {{link.id}}
             <br />
