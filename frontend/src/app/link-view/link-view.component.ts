@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -16,9 +17,11 @@ export class LinkViewComponent implements OnInit {
   public link$: Observable<ApiLink>;
   public subscription: Subscription;
   public loading: boolean = true;
-  public loadingError: string;
 
-  constructor(private linkService: LinksService, private route: ActivatedRoute) { }
+  constructor(
+    private linkService: LinksService,
+    private route: ActivatedRoute,
+    private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -28,8 +31,22 @@ export class LinkViewComponent implements OnInit {
     this.subscription = this.link$.subscribe(
       () => { },
       (error: HttpErrorResponse) => {
-        this.loadingError = error.error.error.message;
+        // this.loadingError = error.error.error.message;
+        if (error.error.error?.message) {
+          this.renderSnackbar(error.error.error?.message);
+        } else {
+          this.renderSnackbar(error.message);
+        }
       }
+    );
+  }
+
+  renderSnackbar(message: string) {
+    const noAction = '';
+    this.snackbar.open(
+      message,
+      noAction,
+      { verticalPosition: 'top', horizontalPosition: 'center' }
     );
   }
 
