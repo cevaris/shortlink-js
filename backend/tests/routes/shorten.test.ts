@@ -1,10 +1,9 @@
-import { afterEach, afterAll, beforeAll, expect, test } from '@jest/globals';
+import { afterAll, afterEach, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../../src/app';
 import { httpStatus } from '../../src/http/status';
 import { linkDb } from '../../src/storage/linkDb';
-import { Link } from '../../src/types';
 
 let server: http.Server;
 const spyLinkDbInsert = jest.spyOn(linkDb, 'insert');

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-export const app = express();
+export const app: express.Express = express();
 
 // parse all json request body as object
 app.use(express.json());
