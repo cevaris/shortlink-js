@@ -12,4 +12,7 @@ export class LinkCreateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onLinkId(linkId: string) {
+    console.log('parent received linkId', linkId);
+  }
 }

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -23,6 +23,8 @@ export class LinkFormComponent implements OnInit {
   // true if request is in progress
   public submitting: boolean = false;
   private subscription: Subscription;
+
+  @Output() linkId = new EventEmitter<string>();
 
   constructor(private linkService: LinksService) {
     this.linkForm = new FormGroup({
@@ -49,6 +51,7 @@ export class LinkFormComponent implements OnInit {
       .subscribe(
         (response: ApiLink) => {
           console.log('link form created', response);
+          this.linkId.emit(response.id);
         },
         (httpError: HttpErrorResponse) => {
           httpError.error.error?.errors.forEach((error: ApiError) => {
