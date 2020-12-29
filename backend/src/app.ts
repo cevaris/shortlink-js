@@ -24,4 +24,3 @@ app.use(cors(corsOptions));
 app.use(require('./routes/root'));
 app.use(require('./routes/shorten'));
 app.use(require('./routes/expand'));
-app.use(require('./routes/redirect'));

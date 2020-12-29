@@ -1,8 +1,8 @@
 import express from 'express';
+import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
-import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
