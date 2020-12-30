@@ -66,7 +66,6 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     try {
         const sideEffect = (l: Link) =>
             linkPublisher.publishCreateEvent(toLinkCreateEvent(l));
-        // const sideEffect = (l: Link) => { throw Error(`boom ${JSON.stringify(l)}`) };
         const link = await linkDb.create(linkURL, sideEffect);
         respond(res, {
             data: { kind: ApiKind.Link, items: [toApiLink(link)], }

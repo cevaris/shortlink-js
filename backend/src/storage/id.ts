@@ -12,10 +12,10 @@ export function newId(len: number) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    return result;
-    // if (Math.random() < 0.75) {
-    //     return "duplug";
-    // } else {
-    //     return result;
-    // }
+    // return result;
+    if (Math.random() < 0.75) {
+        return "duplug";
+    } else {
+        return result;
+    }
 }

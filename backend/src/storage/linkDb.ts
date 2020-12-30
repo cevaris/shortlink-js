@@ -27,27 +27,35 @@ interface RecordLink {
 class LinkFirestore implements LinkDb {
 
     async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
-        return await firebaseDb.runTransaction(
-            async (transaction: Transaction) => {
-                const id: string = newId(6);
-                const doc: DocumentReference = firebaseDb.collection('links').doc(id);
-                const now: Date = new Date();
+        try {
+            return await firebaseDb.runTransaction(
+                async (transaction: Transaction) => {
+                    const id: string = newId(6);
+                    const doc: DocumentReference = firebaseDb.collection('links').doc(id);
+                    const now: Date = new Date();
 
-                const record: RecordLink = {
-                    id: id,
-                    link: linkUrl,
-                    created_at: Timestamp.fromDate(now),
-                };
-                // throw Error('intentionally breaking database create.')
-                transaction.create(doc, record);
+                    const record: RecordLink = {
+                        id: id,
+                        link: linkUrl,
+                        created_at: Timestamp.fromDate(now),
+                    };
 
-                const link: Link = toLink(record);
+                    transaction.create(doc, record);
 
-                // If sideEffect throw, transaction is rolled back
-                await sideEffect(link);
+                    const link: Link = toLink(record);
 
-                return link;
-            });
+                    // If sideEffect throw, transaction is rolled back
+                    await sideEffect(link);
+
+                    return link;
+                });
+        } catch (error) {
+            if (error.code === 6) {
+                // Duplicate document, retry with different link
+                return await this.create(linkUrl, sideEffect);
+            }
+            throw error;
+        }
     }
 
     async get(id: string): Promise<Link> {
