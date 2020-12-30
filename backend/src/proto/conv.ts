@@ -1,18 +1,27 @@
 import { Message } from "@google-cloud/pubsub";
-import { LinkCreateEvent } from ".";
+import { LinkCreateEvent, LinkEvent } from ".";
 import { Link as LinkProto } from "../proto";
 import { Link } from "../types";
-import { com } from "./gen";
 
-export function decodeLinkEvent(message: Message): com.company.links.LinkEvent {
-    const errMessage = com.company.links.LinkEvent.verify(message);
+/**
+ * Verifies and decodes Message bytes into LinkEvent.
+ * 
+ * @param {Message} message message to be converted.
+ * @returns {LinkEvent} decoded from Message.
+ */
+export function decodeLinkEvent(message: Message): LinkEvent {
+    const errMessage = LinkEvent.verify(message);
     if (errMessage) throw Error(errMessage);
 
-    return com.company.links.LinkEvent.decode(message.data);
+    return LinkEvent.decode(message.data);
 }
 
-export function encodeLikeEvent(linkEvent: com.company.links.LinkEvent): Buffer {
-    const bytes = com.company.links.LinkEvent.encode(linkEvent).finish();
+/**
+ * @param {LinkEvent} event event to be converted.
+ * @returns {Buffer} bytes of event.
+ */
+export function encodeLikeEvent(event: LinkEvent): Buffer {
+    const bytes = LinkEvent.encode(event).finish();
     return Buffer.from(bytes);
 }
 
@@ -25,7 +34,8 @@ export function longToNumber(value: number | Long.Long): number {
 }
 
 /**
- * Typescript Link -> Proto LinkCreateEvent
+ * @param {Link} event event to be converted.
+ * @returns {LinkCreateEvent} converted from Link.
  */
 export function toLinkCreateEvent(link: Link): LinkCreateEvent {
     return LinkCreateEvent.create({
@@ -38,7 +48,8 @@ export function toLinkCreateEvent(link: Link): LinkCreateEvent {
 }
 
 /**
- * Proto LinkCreateEvent -> Typescript Link
+ * @param {LinkCreateEvent} event event to be converted.
+ * @returns {Link} converted from LinkCreateEvent.
  */
 export function toLink(event: LinkCreateEvent): Link {
     // https://github.com/dcodeIO/long.js/blob/master/tests/index.js

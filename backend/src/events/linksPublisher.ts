@@ -15,15 +15,15 @@ class GooglePubSubLinkPublisher implements LinkPublisher {
     }
 
     async publishCreateEvent(event: LinkCreateEvent): Promise<void> {
-        const linkEvent = LinkEvent.create({
+        const linkEvent: LinkEvent = LinkEvent.create({
             linkCreateEvent: event
         });
         return this.publishLinkEvent(linkEvent);
     }
 
     async publishLinkEvent(event: LinkEvent): Promise<void> {
-        const buffer = encodeLikeEvent(event);
-        const messageId = await this.publisher.publish(buffer);
+        const buffer: Buffer = encodeLikeEvent(event);
+        const messageId: string = await this.publisher.publish(buffer);
         console.log('published', messageId);
     }
 }
