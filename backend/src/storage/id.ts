@@ -1,4 +1,3 @@
-
 // https://stackoverflow.com/a/1349426/3538289
 const chars: string = '0123456789abcdefghijklmnopqrstuvwxyz';
 

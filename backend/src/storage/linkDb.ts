@@ -1,4 +1,4 @@
-import { DocumentReference, Timestamp, Transaction, GrpcStatus } from "@google-cloud/firestore";
+import { DocumentReference, GrpcStatus, Timestamp, Transaction } from "@google-cloud/firestore";
 import { firebaseDb } from '../clients/firebaseClient';
 import { Link } from '../types';
 import { newId } from './id';
@@ -25,9 +25,22 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
+
+    /**
+     * @see {Link}
+     * This is a complex function:
+     * - Constructs Link.
+     * - Persists Link.
+     * - Executes side effects function on Link.
+     * - Handles duplicate document id.
+     * - If creating or side effect logic throws, create is rolled back.
+     * 
+     * @param linkUrl URL to create Link for.
+     * @param sideEffect Function containing side effects to execute after link is persisted.
+     */
     async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
         try {
-            return await firebaseDb.runTransaction(
+            return await firebaseDb.runTransaction<Link>(
                 async (transaction: Transaction) => {
                     const id: string = newId(6);
                     const doc: DocumentReference = firebaseDb.collection('links').doc(id);
