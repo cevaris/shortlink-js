@@ -1,6 +1,6 @@
 import { Server } from "http";
 import { app } from "./app";
-import { shutdownClientsOnExit } from "./clients/shutdown";
+import { shutdownClientsOnExit } from "./clients/close";
 
 const port = process.env.PORT || 3000;
 const server: Server = app.listen(
