@@ -1,4 +1,4 @@
-import { DocumentReference, Timestamp, Transaction } from "@google-cloud/firestore";
+import { DocumentReference, Timestamp, Transaction, GrpcStatus } from "@google-cloud/firestore";
 import { firebaseDb } from '../clients/firebaseClient';
 import { Link } from '../types';
 import { newId } from './id';
@@ -25,7 +25,6 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
-
     async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
         try {
             return await firebaseDb.runTransaction(
@@ -50,8 +49,8 @@ class LinkFirestore implements LinkDb {
                     return link;
                 });
         } catch (error) {
-            if (error.code === 6) {
-                // Duplicate document, retry with different link
+            if (error.code === GrpcStatus.ALREADY_EXISTS) {
+                // Duplicate document id found, retry with different id
                 return await this.create(linkUrl, sideEffect);
             }
             throw error;
