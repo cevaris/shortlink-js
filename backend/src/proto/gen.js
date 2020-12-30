@@ -49,9 +49,9 @@
                      * Properties of a Link.
                      * @memberof com.company.links
                      * @interface ILink
-                     * @property {string|null} [id] Link id
-                     * @property {string|null} [link] Link link
-                     * @property {number|Long|null} [createdAtMs] Link createdAtMs
+                     * @property {string} id Link id
+                     * @property {string} link Link link
+                     * @property {number|Long} createdAtMs Link createdAtMs
                      */
     
                     /**
@@ -117,12 +117,9 @@
                     Link.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.id != null && Object.hasOwnProperty.call(message, "id"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
-                        if (message.link != null && Object.hasOwnProperty.call(message, "link"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.link);
-                        if (message.createdAtMs != null && Object.hasOwnProperty.call(message, "createdAtMs"))
-                            writer.uint32(/* id 3, wireType 0 =*/24).int64(message.createdAtMs);
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.link);
+                        writer.uint32(/* id 3, wireType 0 =*/24).int64(message.createdAtMs);
                         return writer;
                     };
     
@@ -171,6 +168,12 @@
                                 break;
                             }
                         }
+                        if (!message.hasOwnProperty("id"))
+                            throw $util.ProtocolError("missing required 'id'", { instance: message });
+                        if (!message.hasOwnProperty("link"))
+                            throw $util.ProtocolError("missing required 'link'", { instance: message });
+                        if (!message.hasOwnProperty("createdAtMs"))
+                            throw $util.ProtocolError("missing required 'createdAtMs'", { instance: message });
                         return message;
                     };
     
@@ -201,15 +204,12 @@
                     Link.verify = function verify(message) {
                         if (typeof message !== "object" || message === null)
                             return "object expected";
-                        if (message.id != null && message.hasOwnProperty("id"))
-                            if (!$util.isString(message.id))
-                                return "id: string expected";
-                        if (message.link != null && message.hasOwnProperty("link"))
-                            if (!$util.isString(message.link))
-                                return "link: string expected";
-                        if (message.createdAtMs != null && message.hasOwnProperty("createdAtMs"))
-                            if (!$util.isInteger(message.createdAtMs) && !(message.createdAtMs && $util.isInteger(message.createdAtMs.low) && $util.isInteger(message.createdAtMs.high)))
-                                return "createdAtMs: integer|Long expected";
+                        if (!$util.isString(message.id))
+                            return "id: string expected";
+                        if (!$util.isString(message.link))
+                            return "link: string expected";
+                        if (!$util.isInteger(message.createdAtMs) && !(message.createdAtMs && $util.isInteger(message.createdAtMs.low) && $util.isInteger(message.createdAtMs.high)))
+                            return "createdAtMs: integer|Long expected";
                         return null;
                     };
     
@@ -295,7 +295,7 @@
                      * Properties of a LinkCreateEvent.
                      * @memberof com.company.links
                      * @interface ILinkCreateEvent
-                     * @property {com.company.links.ILink|null} [link] LinkCreateEvent link
+                     * @property {com.company.links.ILink} link LinkCreateEvent link
                      */
     
                     /**
@@ -315,7 +315,7 @@
     
                     /**
                      * LinkCreateEvent link.
-                     * @member {com.company.links.ILink|null|undefined} link
+                     * @member {com.company.links.ILink} link
                      * @memberof com.company.links.LinkCreateEvent
                      * @instance
                      */
@@ -345,8 +345,7 @@
                     LinkCreateEvent.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.link != null && Object.hasOwnProperty.call(message, "link"))
-                            $root.com.company.links.Link.encode(message.link, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        $root.com.company.links.Link.encode(message.link, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                         return writer;
                     };
     
@@ -389,6 +388,8 @@
                                 break;
                             }
                         }
+                        if (!message.hasOwnProperty("link"))
+                            throw $util.ProtocolError("missing required 'link'", { instance: message });
                         return message;
                     };
     
@@ -419,7 +420,7 @@
                     LinkCreateEvent.verify = function verify(message) {
                         if (typeof message !== "object" || message === null)
                             return "object expected";
-                        if (message.link != null && message.hasOwnProperty("link")) {
+                        {
                             var error = $root.com.company.links.Link.verify(message.link);
                             if (error)
                                 return "link." + error;

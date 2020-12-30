@@ -12,13 +12,13 @@ export namespace com {
             interface ILink {
 
                 /** Link id */
-                id?: (string|null);
+                id: string;
 
                 /** Link link */
-                link?: (string|null);
+                link: string;
 
                 /** Link createdAtMs */
-                createdAtMs?: (number|Long|null);
+                createdAtMs: (number|Long);
             }
 
             /** Represents a Link. */
@@ -114,7 +114,7 @@ export namespace com {
             interface ILinkCreateEvent {
 
                 /** LinkCreateEvent link */
-                link?: (com.company.links.ILink|null);
+                link: com.company.links.ILink;
             }
 
             /** Represents a LinkCreateEvent. */
@@ -127,7 +127,7 @@ export namespace com {
                 constructor(properties?: com.company.links.ILinkCreateEvent);
 
                 /** LinkCreateEvent link. */
-                public link?: (com.company.links.ILink|null);
+                public link: com.company.links.ILink;
 
                 /**
                  * Creates a new LinkCreateEvent instance using the specified properties.

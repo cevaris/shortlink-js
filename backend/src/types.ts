@@ -1,6 +1,3 @@
-import protobuf from "protobufjs";
-
-
 export interface Link {
     id: string
     link: string

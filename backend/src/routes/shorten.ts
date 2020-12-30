@@ -1,8 +1,10 @@
 import express from 'express';
 import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
+import { linkPublisher, toLinkCreateEvent } from '../events/linksPublisher';
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
+import { com } from '../proto/gen';
 import { linkDb } from '../storage/linkDb';
 
 const router = express.Router();
@@ -62,6 +64,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     try {
         const link = await linkDb.create(linkURL);
+        await linkPublisher.publishCreateEvent(toLinkCreateEvent(link));
         return respond(res, {
             data: { kind: ApiKind.Link, items: [toApiLink(link)], }
         })
