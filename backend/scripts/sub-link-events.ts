@@ -7,6 +7,9 @@ function handler(message: Message): void {
     try {
         const linkEvent = decodeLinkEvent(message);
         console.log('found', linkEvent.toJSON());
+
+        // write to "Big Query" or some other large scale offline datastore
+
         message.ack();
     } catch (error) {
         console.error('could not decode message', message.id);
@@ -14,4 +17,4 @@ function handler(message: Message): void {
 }
 
 linkSubscriber.subscribe(handler);
-console.log('subscribed...');   
+console.log('subscribed...');

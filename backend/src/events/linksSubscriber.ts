@@ -6,6 +6,7 @@ export interface LinkSubscriber {
     subscribe(handler: (message: Message) => void): void
 }
 
+// https://cloud.google.com/pubsub/docs/pull
 class GoogleSubscriberLink implements LinkSubscriber {
     private subscriber: Subscription;
 
