@@ -1,12 +1,13 @@
+import { DocumentReference, Timestamp, Transaction } from "@google-cloud/firestore";
 import { firebaseDb } from '../clients/firebaseClient';
-import { Timestamp, Transaction } from "@google-cloud/firestore";
 import { Link } from '../types';
 import { newId } from './id';
 
+type SideEffect<T> = (t: T) => Promise<void>
+
 export interface LinkDb {
-    create(t: Transaction, link: string): Promise<Link>
+    create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link>
     get(id: string): Promise<Link>
-    transaction<T>(f: (t: Transaction) => Promise<T>): Promise<T>
 }
 
 export class StorageNotFoundError extends Error {
@@ -24,34 +25,29 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
-    async transaction<T>(f: (t: Transaction) => Promise<T>): Promise<T> {
-        return await firebaseDb.runTransaction(f);
-    }
 
-    async create(t: Transaction, link: string): Promise<Link> {
-        const id = newId(6);
-        const doc = firebaseDb.collection('links').doc(id);
-        const now = new Date();
+    async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
+        return await firebaseDb.runTransaction(
+            async (transaction: Transaction) => {
+                const id: string = newId(6);
+                const doc: DocumentReference = firebaseDb.collection('links').doc(id);
+                const now: Date = new Date();
 
-        try {
-            const record: RecordLink = {
-                id: id,
-                link: link,
-                created_at: Timestamp.fromDate(now),
-            };
-            // throw Error('intentionally breaking database create.')
-            t.create(doc, record);
-            // await doc.create(record);
+                const record: RecordLink = {
+                    id: id,
+                    link: linkUrl,
+                    created_at: Timestamp.fromDate(now),
+                };
+                // throw Error('intentionally breaking database create.')
+                transaction.create(doc, record);
 
-            return toLink(record);
-        } catch (error) {
-            if (error.code === 6) {
-                // Duplicate document, retry with different link
-                return await this.create(t, link);
-            }
-            throw error;
-        }
+                const link: Link = toLink(record);
 
+                // If sideEffect throw, transaction is rolled back
+                await sideEffect(link);
+
+                return link;
+            });
     }
 
     async get(id: string): Promise<Link> {

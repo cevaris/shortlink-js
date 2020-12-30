@@ -1,12 +1,12 @@
 import express from 'express';
 import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { linkPublisher } from '../events/linksPublisher';
-import { Transaction } from "@google-cloud/firestore";
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
 import { toLinkCreateEvent } from '../proto/conv';
 import { linkDb } from '../storage/linkDb';
+import { Link } from '../types';
 
 const router = express.Router();
 
@@ -64,14 +64,13 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     }
 
     try {
-        await linkDb.transaction(async (t: Transaction) => {
-            const link = await linkDb.create(t, linkURL);
-            await linkPublisher.publishCreateEvent(toLinkCreateEvent(link));
-            // throw Error(`broken: ${JSON.stringify(link)}`);
-            respond(res, {
-                data: { kind: ApiKind.Link, items: [toApiLink(link)], }
-            })
-        });
+        const sideEffect = (l: Link) =>
+            linkPublisher.publishCreateEvent(toLinkCreateEvent(l));
+        // const sideEffect = (l: Link) => { throw Error(`boom ${JSON.stringify(l)}`) };
+        const link = await linkDb.create(linkURL, sideEffect);
+        respond(res, {
+            data: { kind: ApiKind.Link, items: [toApiLink(link)], }
+        })
     } catch (error) {
         const message = `failed to create link: ${error.message}.`;
         return respond(res, {
