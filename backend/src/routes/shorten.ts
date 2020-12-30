@@ -1,6 +1,7 @@
 import express from 'express';
 import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { linkPublisher } from '../events/linksPublisher';
+import { Transaction } from "@google-cloud/firestore";
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
@@ -63,11 +64,14 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
     }
 
     try {
-        const link = await linkDb.create(linkURL);
-        await linkPublisher.publishCreateEvent(toLinkCreateEvent(link));
-        return respond(res, {
-            data: { kind: ApiKind.Link, items: [toApiLink(link)], }
-        })
+        await linkDb.transaction(async (t: Transaction) => {
+            const link = await linkDb.create(t, linkURL);
+            await linkPublisher.publishCreateEvent(toLinkCreateEvent(link));
+            // throw Error(`broken: ${JSON.stringify(link)}`);
+            respond(res, {
+                data: { kind: ApiKind.Link, items: [toApiLink(link)], }
+            })
+        });
     } catch (error) {
         const message = `failed to create link: ${error.message}.`;
         return respond(res, {

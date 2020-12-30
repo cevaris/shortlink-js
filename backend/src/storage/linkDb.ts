@@ -1,11 +1,12 @@
 import { firebaseDb } from '../clients/firebaseClient';
-import { Timestamp } from "@google-cloud/firestore";
+import { Timestamp, Transaction } from "@google-cloud/firestore";
 import { Link } from '../types';
 import { newId } from './id';
 
 export interface LinkDb {
-    create(link: string): Promise<Link>
+    create(t: Transaction, link: string): Promise<Link>
     get(id: string): Promise<Link>
+    transaction<T>(f: (t: Transaction) => Promise<T>): Promise<T>
 }
 
 export class StorageNotFoundError extends Error {
@@ -23,7 +24,11 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
-    async create(link: string): Promise<Link> {
+    async transaction<T>(f: (t: Transaction) => Promise<T>): Promise<T> {
+        return await firebaseDb.runTransaction(f);
+    }
+
+    async create(t: Transaction, link: string): Promise<Link> {
         const id = newId(6);
         const doc = firebaseDb.collection('links').doc(id);
         const now = new Date();
@@ -35,13 +40,14 @@ class LinkFirestore implements LinkDb {
                 created_at: Timestamp.fromDate(now),
             };
             // throw Error('intentionally breaking database create.')
-            await doc.create(record);
+            t.create(doc, record);
+            // await doc.create(record);
 
             return toLink(record);
         } catch (error) {
             if (error.code === 6) {
                 // Duplicate document, retry with different link
-                return await this.create(link);
+                return await this.create(t, link);
             }
             throw error;
         }

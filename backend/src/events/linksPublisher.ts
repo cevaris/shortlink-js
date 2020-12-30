@@ -24,7 +24,7 @@ class GooglePubSubLinkPublisher implements LinkPublisher {
     async publishLinkEvent(event: proto.LinkEvent): Promise<void> {
         const buffer: Buffer = encodeLikeEvent(event);
         const messageId: string = await this.publisher.publish(buffer);
-        console.log('published', messageId);
+        // console.log('published', messageId);
     }
 }
 
