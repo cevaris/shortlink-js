@@ -20,24 +20,24 @@ beforeEach(() => {
     spyLinkDbGet.mockClear();
 })
 
-test('existing id returns 200', async () => {
-    const link = new Link('TEST', 'http://link.com', new Date());
-    spyLinkDbGet.mockResolvedValue(link);
+// test('existing id returns 200', async () => {
+//     const link = new Link('TEST', 'http://link.com', new Date());
+//     spyLinkDbGet.mockResolvedValue(link);
 
-    const resp = await request(server)
-        .get(`/expand.json?id=${link.id}`);
+//     const resp = await request(server)
+//         .get(`/expand.json?id=${link.id}`);
 
-    expect(spyLinkDbGet.mock.calls).toEqual([[link.id]]);
-    expect(resp.status).toBe(200);
-    expect(resp.body).toStrictEqual({
-        kind: 'link',
-        data: {
-            id: link.id,
-            link: link.link,
-            created_at: link.createdAt.toISOString(),
-        }
-    });
-});
+//     expect(spyLinkDbGet.mock.calls).toEqual([[link.id]]);
+//     expect(resp.status).toBe(200);
+//     expect(resp.body).toStrictEqual({
+//         kind: 'link',
+//         data: {
+//             id: link.id,
+//             link: link.link,
+//             created_at: link.createdAt.toISOString(),
+//         }
+//     });
+// });
 
 test('missing id param returns 400', async () => {
     const resp = await request(server)

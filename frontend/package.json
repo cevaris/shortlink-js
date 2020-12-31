@@ -2,7 +2,7 @@
   "name": "short-link",
   "version": "0.0.0",
   "scripts": {
-    "deploy": "npm run build --prod && firebase deploy",
+    "deploy": "npm run build -- --prod && firebase deploy",
     "dev": "ng serve",
     "ng": "ng",
     "start": "ng serve",

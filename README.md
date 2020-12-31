@@ -30,3 +30,9 @@ Development
     # start backend and frontend server
     ./scripts/backend npm run dev
     ./scripts/frontend npm run dev
+
+
+Deployment
+
+- Backend: https://project-id-shortlink.wm.r.appspot.com/
+- Frontend: https://project-id-shortlink.web.app

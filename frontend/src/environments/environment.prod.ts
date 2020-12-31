@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiDomain: 'http://TBD.com',
+  apiDomain: 'https://project-id-shortlink.wm.r.appspot.com',
 };
