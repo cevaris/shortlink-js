@@ -5,7 +5,7 @@ export enum LogLevel {
     INFO = 1,
     DEBUG = 2,
 }
-export let logLevel = LogLevel.INFO;
+let logLevel = LogLevel.INFO;
 export function setLogLevel(_logLevel: LogLevel): void {
     logLevel = _logLevel;
 }
@@ -36,14 +36,10 @@ class ConsoleLogger implements Logger {
     }
 }
 
-function now(): string {
-    return new Date().toISOString();
-}
-
 function build(level: LogLevel, message: any[]): string {
+    const nowStr = new Date().toISOString();
     const body = message.map(x => util.inspect(x)).join(' ');
-    return `${now()} ${LogLevel[level]} ${body}`;
+    return `${nowStr} ${LogLevel[level]} ${body}`;
 }
 
 export const logger: Logger = new ConsoleLogger();
-
