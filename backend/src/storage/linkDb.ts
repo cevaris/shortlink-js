@@ -25,7 +25,6 @@ interface RecordLink {
 }
 
 class LinkFirestore implements LinkDb {
-
     /**
      * @see {Link}
      * This is a complex function:
