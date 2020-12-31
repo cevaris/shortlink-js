@@ -25,6 +25,8 @@ export class LinkViewComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    if (id === '') return;
+
     this.link$ = this.linkService.get(id).pipe(
       finalize(() => this.loading = false)
     );

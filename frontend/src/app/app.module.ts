@@ -15,15 +15,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LinkCreateComponent } from './link-create/link-create.component';
 import { LinkFormComponent } from './link-create/link-form/link-form.component';
-import { LinkViewComponent } from './link-view/link-view.component';
 import { LinkRedirectComponent } from './link-redirect/link-redirect.component';
+import { LinkViewComponent } from './link-view/link-view.component';
 
 // https://angular.io/guide/router
 const appRoutes: Routes = [
   { path: 'links', component: LinkCreateComponent },
   { path: 'links/:id', component: LinkViewComponent },
   { path: ':id', component: LinkRedirectComponent },
-  { path: '**', redirectTo: 'links' },
+  { path: '', redirectTo: 'links', pathMatch: 'full' },
 ];
 
 @NgModule({
