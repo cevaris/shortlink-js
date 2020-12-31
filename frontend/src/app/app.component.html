@@ -1,5 +1,10 @@
 <mat-toolbar>
-  <span>ShortLink</span>
+  <mat-nav-list fxLayout="row">
+    <a mat-list-item href="/">
+      <h1>ShortLink</h1>
+    </a>
+    <a mat-list-item href="/links">Create</a>
+  </mat-nav-list>
 </mat-toolbar>
 
 <router-outlet></router-outlet>
