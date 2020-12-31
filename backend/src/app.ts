@@ -20,5 +20,4 @@ app.use(cors(corsOptions));
 
 // import routes
 app.use(require('./routes/root'));
-app.use(require('./routes/shorten'));
-app.use(require('./routes/expand'));
+app.use(require('./routes/links'));

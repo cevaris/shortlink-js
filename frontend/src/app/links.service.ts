@@ -12,7 +12,7 @@ export class LinksService {
   constructor(private http: HttpClient) { }
 
   get(id: string): Observable<ApiLink> {
-    return this.http.get<ApiResponse<ApiLink>>(`${environment.apiDomain}/expand/${id}.json`).pipe(
+    return this.http.get<ApiResponse<ApiLink>>(`${environment.apiDomain}/links/${id}.json`).pipe(
       map((response) => {
         if (response.data && response.data?.items.length > 0) {
           return response.data.items[0];
@@ -29,7 +29,7 @@ export class LinksService {
 
   create(link: string): Observable<ApiLink> {
     const body = { link: link };
-    return this.http.post<ApiResponse<ApiLink>>(`${environment.apiDomain}/shorten.json`, body).pipe(
+    return this.http.post<ApiResponse<ApiLink>>(`${environment.apiDomain}/links.json`, body).pipe(
       map((response) => {
         if (response.data && response.data?.items.length > 0) {
           return response.data.items[0];

@@ -1,16 +1,16 @@
 import express from 'express';
-import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
+import { ApiKind, ApiLink, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
 import { linkPublisher } from '../events/linksPublisher';
 import { respond } from '../http/responses';
 import { httpStatus } from '../http/status';
 import { isValidLink } from '../http/valid';
 import { toLinkCreateEvent } from '../proto/conv';
-import { linkDb } from '../storage/linkDb';
+import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 import { Link } from '../types';
 
 const router = express.Router();
 
-router.post('/shorten.json', async (req: express.Request, res: express.Response) => {
+router.post('/links.json', async (req: express.Request, res: express.Response) => {
     const linkURL = req.body?.link?.toString();
     if (!linkURL) {
         const message = 'missing "link" json body field.';
@@ -79,6 +79,45 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
                 errors: [{
                     reason: ApiReason.Error,
                     message: message,
+                }]
+            }
+        });
+    }
+});
+
+router.get('/links/:id.json', async (req: express.Request, res: express.Response) => {
+    const id: string = req.params.id.toString();
+
+    try {
+        const link = await linkDb.get(id);
+        return respond<ApiLink>(res, {
+            data: {
+                kind: ApiKind.Link,
+                items: [toApiLink(link)],
+            }
+        })
+    } catch (error) {
+        if (error instanceof StorageNotFoundError) {
+            const message = `link "${id}" not found`;
+            return respond(res, {
+                error: {
+                    code: 404,
+                    message: message,
+                    errors: [{
+                        reason: ApiReason.NotFound,
+                        message: message,
+                    }]
+                }
+            });
+        }
+
+        return respond(res, {
+            error: {
+                code: 503,
+                message: error.message,
+                errors: [{
+                    reason: ApiReason.Error,
+                    message: error.message,
                 }]
             }
         });
