@@ -17,6 +17,7 @@ import { LinkCreateComponent } from './link-create/link-create.component';
 import { LinkFormComponent } from './link-create/link-form/link-form.component';
 import { LinkRedirectComponent } from './link-redirect/link-redirect.component';
 import { LinkViewComponent } from './link-view/link-view.component';
+import {MatCardModule} from '@angular/material/card'; 
 import { HomeComponent } from './home/home.component';
 
 // https://angular.io/guide/router
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
     FlexLayoutModule,
     HttpClientModule,
     MatButtonModule,
+    MatCardModule,
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,

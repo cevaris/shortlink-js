@@ -5,12 +5,21 @@
             <mat-spinner></mat-spinner>
         </div>
         <div *ngIf="link$ | async as link">
-            Link: <a href="{{link.link}}">{{link.link}}</a>
+
+
             <br />
-            Id: {{link.id}}
-            <br />
-            CreatedAt: {{link.created_at}}
-            <br />
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{link.id}}</mat-card-title>
+                    <mat-card-subtitle><a href="{{link.link}}">{{link.link}}</a>
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content style="padding-left: 15px;">
+                    CreatedAt: {{link.created_at}}
+                </mat-card-content>
+            </mat-card>
+
+
         </div>
     </div>
     <div fxFlex="30"></div>
