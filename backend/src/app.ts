@@ -1,5 +1,5 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 
 export const app: express.Express = express();
 
@@ -7,8 +7,8 @@ export const app: express.Express = express();
 app.use(express.json());
 
 
-// allow CORS from select clients
-const allowedOrigins = ['http://localhost:4200'];
+// allow CORS from select origins
+const allowedOrigins = ['http://localhost:4200', 'https://project-id-shortlink.web.app'];
 const corsOptions = {
     origin: function (origin: string | undefined, callback: Function) {
         if (origin && allowedOrigins.indexOf(origin) !== -1) {

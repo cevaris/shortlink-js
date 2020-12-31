@@ -1,9 +1,10 @@
 import { Server } from "http";
 import { app } from "./app";
 import { closeClientsOnExit } from "./clients/close";
+import { config } from "./config";
 import { logger, LogLevel, setLogLevel } from './logger';
 
-if (process.env.NODE_ENV?.toString() !== 'production') {
+if (!config.isProduction) {
     setLogLevel(LogLevel.DEBUG);
 }
 

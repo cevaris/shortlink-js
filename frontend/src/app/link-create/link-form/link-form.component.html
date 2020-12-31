@@ -16,4 +16,8 @@
     </mat-error>
     <button mat-raised-button color="primary"
         [disabled]="!linkForm.valid || submitting">Shorten</button>
+
+    <div *ngIf="submitting" fxLayoutAlign="center">
+        <mat-spinner></mat-spinner>
+    </div>
 </form>

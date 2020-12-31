@@ -30,7 +30,7 @@ router.post('/shorten.json', async (req: express.Request, res: express.Response)
 
     // TODO: add tests
     if (!isValidLink(linkURL)) {
-        const message = `link "${linkURL}" is not a valid URL.`;
+        const message = `link "${linkURL}" is not a valid URL. (Please include protocol; ex. https://)`;
         return respond(res, {
             error: {
                 code: 400,

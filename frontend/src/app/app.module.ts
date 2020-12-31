@@ -20,7 +20,7 @@ import { LinkRedirectComponent } from './link-redirect/link-redirect.component';
 
 // https://angular.io/guide/router
 const appRoutes: Routes = [
-  { path: 'links/', component: LinkCreateComponent },
+  { path: 'links', component: LinkCreateComponent, pathMatch: 'full' },
   { path: 'links/:id', component: LinkViewComponent },
   { path: ':id', component: LinkRedirectComponent },
   { path: '**', redirectTo: 'links/' },
