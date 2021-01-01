@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ApiLink, ApiResponse } from './types';
@@ -33,6 +33,25 @@ export class LinksService {
       map((response) => {
         if (response.data && response.data?.items.length > 0) {
           return response.data.items[0];
+        }
+
+        if (response.error) {
+          throw response.error;
+        }
+
+        throw new Error(`unexpected response ${response}`);
+      }),
+    );
+  }
+
+  scan(token?: string): Observable<ApiLink[]> {
+    const url = token ?
+      `${environment.apiDomain}/links.json?token=${token}` :
+      `${environment.apiDomain}/links.json`;
+    return this.http.get<ApiResponse<ApiLink>>(url).pipe(
+      map((response) => {
+        if (response.data) {
+          return response.data.items;
         }
 
         if (response.error) {

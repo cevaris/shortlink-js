@@ -12,6 +12,7 @@ export enum ApiKind {
 
 export enum ApiLocation {
     Link = 'link',
+    Limit = 'limit',
 }
 
 export enum ApiLocationType {
