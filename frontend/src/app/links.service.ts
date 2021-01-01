@@ -5,6 +5,12 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ApiLink, ApiResponse } from './types';
 
+// TODO: see if you can type ApiResponse<ApiLink>.data.
+export interface ApiLinks {
+  items: ApiLink[]
+  nextPageToken: string | null
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,14 +50,17 @@ export class LinksService {
     );
   }
 
-  scan(token?: string): Observable<ApiLink[]> {
+  scan(token?: string): Observable<ApiLinks> {
     const url = token ?
       `${environment.apiDomain}/links.json?token=${token}` :
       `${environment.apiDomain}/links.json`;
     return this.http.get<ApiResponse<ApiLink>>(url).pipe(
       map((response) => {
         if (response.data) {
-          return response.data.items;
+          return {
+            items: response.data.items,
+            nextPageToken: response.data.next_page_token
+          };
         }
 
         if (response.error) {

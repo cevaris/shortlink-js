@@ -1,7 +1,12 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>{{link.id}}</mat-card-title>
-        <mat-card-subtitle><a href="{{link.link}}">{{link.link}}</a>
+        <mat-card-subtitle><a href="{{link.link}}">
+                {{
+                (link.link.length > 65) ?
+                (link.link | slice:0:65)+'..' : (link.link)
+                }}
+            </a>
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content style="padding-left: 15px;">

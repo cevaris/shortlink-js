@@ -28,8 +28,8 @@ export class LinkViewComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id === '') return;
 
+    // update page title
     this.title.setTitle(`ShortLink - ${id}`);
 
     this.link$ = this.linkService.get(id).pipe(

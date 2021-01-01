@@ -43,7 +43,7 @@ export class LinkFormComponent implements OnInit {
   // https://juristr.com/blog/2019/02/display-server-side-validation-errors-with-angular/
   onSubmit(data: LinkForm): void {
     this.submitting = true;
-    this.formError = ''; // reset previous error
+    this.formError = ''; // reset previous error, if any
 
     this.subscription = this.linkService.create(data.link)
       .pipe(

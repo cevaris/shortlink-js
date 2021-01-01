@@ -14,6 +14,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LinkCreateComponent } from './link-create/link-create.component';
@@ -46,6 +47,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FlexLayoutModule,
     HttpClientModule,
+    InfiniteScrollModule,
     MatButtonModule,
     MatCardModule,
     MatDividerModule,

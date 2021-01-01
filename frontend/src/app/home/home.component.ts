@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { LinksService } from '../links.service';
+import { ApiLinks, LinksService } from '../links.service';
 import { ApiLink } from '../types';
 
 @Component({
@@ -12,27 +12,42 @@ import { ApiLink } from '../types';
 })
 export class HomeComponent implements OnInit {
 
-  public links$: Observable<ApiLink[]>;
-  public subscription: Subscription;
-  public loading: boolean = true;
+  public loading: boolean;
+  public links$: Observable<ApiLinks>;
+  public links = new Array<ApiLink>();
+
+  private subscription: Subscription;
+  private nextPageToken: string | null = null;
 
   constructor(private linkService: LinksService) { }
 
   ngOnInit(): void {
-    this.links$ = this.linkService.scan().pipe(
-      finalize(() => this.loading = false)
-    );
-    this.subscription = this.links$.subscribe(
-      () => { },
-      (error: HttpErrorResponse) => {
-        console.error(error.error);
-      }
-    );
+    this.loadLinks();
   }
 
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  onScroll() {
+    this.loadLinks();
+  }
+
+  loadLinks() {
+    this.loading = true;
+    this.links$ = this.linkService.scan(this.nextPageToken).pipe(
+      finalize(() => this.loading = false)
+    );
+    this.subscription = this.links$.subscribe(
+      (links: ApiLinks) => {
+        this.nextPageToken = links.nextPageToken;
+        this.links = this.links.concat(links.items);
+      },
+      (error: HttpErrorResponse) => {
+        console.error(error.error);
+      }
+    );
   }
 }
