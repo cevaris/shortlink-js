@@ -21,7 +21,7 @@ afterEach(() => {
     jest.clearAllMocks();
 })
 
-test('missing link json body field returns 400', async () => {
+test.skip('missing link json body field returns 400', async () => {
     const resp = await request(server)
         .post('/shorten.json');
 
@@ -31,7 +31,7 @@ test('missing link json body field returns 400', async () => {
     expect(resp.body?.kind).toBe('error');
 });
 
-// test('existing id returns 200', async () => {
+// test.skip('existing id returns 200', async () => {
 //     const link = new Link('link', 'http://link.com', new Date());
 //     spyLinkDbInsert.mockResolvedValue(link);
 //     spyHttpStatusGet.mockResolvedValue(200);
@@ -54,7 +54,7 @@ test('missing link json body field returns 400', async () => {
 //     });
 // });
 
-test('link fails validation returns 400', async () => {
+test.skip('link fails validation returns 400', async () => {
     const link = 'http://example.com';
 
     // mock http status returns 404/NotFound
@@ -75,7 +75,7 @@ test('link fails validation returns 400', async () => {
 });
 
 
-test('error when validating link returns 500', async () => {
+test.skip('error when validating link returns 500', async () => {
     const link = 'http://example.com';
     const errorMessage = 'this is a test error';
     spyHttpStatusGet.mockRejectedValue(Error(errorMessage));
@@ -94,7 +94,7 @@ test('error when validating link returns 500', async () => {
     });
 });
 
-test('failed to create link returns 503', async () => {
+test.skip('failed to create link returns 503', async () => {
     const link = 'http://example.com';
     const errorMessage = 'this is a test error';
     spyLinkDbInsert.mockRejectedValue(Error(errorMessage));
