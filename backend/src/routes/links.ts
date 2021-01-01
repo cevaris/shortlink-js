@@ -125,15 +125,22 @@ router.get('/links/:id.json', async (req: express.Request, res: express.Response
 });
 
 router.get('/links.json', async (req: express.Request, res: express.Response) => {
+    const token: Date = req.query?.token ?
+        new Date(Date.parse(req.query?.token?.toString())) : new Date();
+
     try {
-        const links = await linkDb.scan(new Date(), 10);
-        // return respond<ApiLink>(res, {
-        //     data: {
-        //         kind: ApiKind.Link,
-        //         items: [toApiLink(link)],
-        //     }
-        // })
-        res.json(links);
+        const links = await linkDb.scan(token, 10);
+        // extract last Link.createdAt value
+        const nextToken = links.slice(-1)[0]?.createdAt?.toISOString() || null;
+        const apiLinks = links.map(toApiLink);
+
+        respond<ApiLink>(res, {
+            data: {
+                kind: ApiKind.Link,
+                next_page_token: nextToken,
+                items: apiLinks
+            }
+        });
     } catch (error) {
         return respond(res, {
             error: {

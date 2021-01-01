@@ -1,5 +1,5 @@
 import express from 'express';
-import { ApiLink, ApiResponse } from '../api';
+import { ApiResponse } from '../api';
 
 export function respond<T>(res: express.Response, apiResponse: ApiResponse<T>) {
     if (apiResponse.error) {

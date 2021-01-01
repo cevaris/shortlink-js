@@ -35,7 +35,8 @@ export interface ApiError {
 export interface ApiResponse<T> {
     data?: {
         kind: ApiKind
-        items: [T]
+        next_page_token?: string | null
+        items: Array<T>
     }
     error?: {
         code: number
