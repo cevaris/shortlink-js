@@ -95,7 +95,7 @@ router.get('/links/:id.json', async (req: express.Request, res: express.Response
                 kind: ApiKind.Link,
                 items: [toApiLink(link)],
             }
-        })
+        });
     } catch (error) {
         if (error instanceof StorageNotFoundError) {
             const message = `link "${id}" not found`;

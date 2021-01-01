@@ -22,7 +22,7 @@ export enum ApiLocationType {
 export enum ApiReason {
     Error = 'error',
     Invalid = 'invalid',
-    NotFound = 'NotFound',
+    NotFound = 'notFound',
     Required = 'required',
 }
 
