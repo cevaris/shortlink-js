@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { LinksService } from '../links.service';
@@ -21,7 +21,6 @@ export class LinkRedirectComponent implements OnInit {
   constructor(
     private linkService: LinksService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private snackbar: MatSnackBar
   ) { }
 

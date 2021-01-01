@@ -7,7 +7,8 @@
         </div>
 
         <mat-list *ngIf="links$ | async as links">
-            <mat-list-item *ngFor="let link of links">
+            <mat-list-item *ngFor="let link of links"
+                routerLink="/links/{{link.id}}">
                 <app-link-card [link]="link"></app-link-card>
             </mat-list-item>
         </mat-list>
