@@ -23,9 +23,7 @@ export class HomeComponent implements OnInit {
       finalize(() => this.loading = false)
     );
     this.subscription = this.links$.subscribe(
-      (links) => {
-        console.log(links);
-      },
+      () => { },
       (error: HttpErrorResponse) => {
         console.error(error.error);
       }

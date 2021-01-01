@@ -51,7 +51,6 @@ export class LinkFormComponent implements OnInit {
       )
       .subscribe(
         (response: ApiLink) => {
-          console.log('link form created', response);
           this.linkEmitter.emit(response);
         },
         (httpError: HttpErrorResponse) => {

@@ -1,5 +1,6 @@
 import { Topic } from "@google-cloud/pubsub";
 import { pubSubClient } from "../clients/pubsubClient";
+import { logger } from "../logger";
 import { proto } from "../proto";
 import { encodeLikeEvent } from "../proto/conv";
 
@@ -24,7 +25,7 @@ class GooglePubSubLinkPublisher implements LinkPublisher {
     async publishLinkEvent(event: proto.LinkEvent): Promise<void> {
         const buffer: Buffer = encodeLikeEvent(event);
         const messageId: string = await this.publisher.publish(buffer);
-        // console.log('published', messageId);
+        logger.debug('published', messageId);
     }
 }
 

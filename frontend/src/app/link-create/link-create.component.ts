@@ -17,7 +17,6 @@ export class LinkCreateComponent implements OnInit {
   }
 
   onLinkCreate(link: ApiLink) {
-    console.log('parent received linkId', link);
     this.router.navigateByUrl(`links/${link.id}`);
   }
 }
