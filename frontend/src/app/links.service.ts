@@ -5,8 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ApiLink, ApiResponse } from './types';
 
-// TODO: see if you can type ApiResponse<ApiLink>.data.
-export interface ApiLinks {
+export interface Links {
   items: ApiLink[]
   nextPageToken: string | null
 }
@@ -50,7 +49,7 @@ export class LinksService {
     );
   }
 
-  scan(token?: string): Observable<ApiLinks> {
+  scan(token?: string): Observable<Links> {
     const url = token ?
       `${environment.apiDomain}/links.json?token=${token}` :
       `${environment.apiDomain}/links.json`;

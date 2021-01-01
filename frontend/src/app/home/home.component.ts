@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { ApiLinks, LinksService } from '../links.service';
+import { Links, LinksService } from '../links.service';
 import { ApiLink } from '../types';
 
 @Component({
@@ -13,7 +13,7 @@ import { ApiLink } from '../types';
 export class HomeComponent implements OnInit {
 
   public loading: boolean;
-  public links$: Observable<ApiLinks>;
+  public links$: Observable<Links>;
   public links = new Array<ApiLink>();
 
   private subscription: Subscription;
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
       finalize(() => this.loading = false)
     );
     this.subscription = this.links$.subscribe(
-      (links: ApiLinks) => {
+      (links: Links) => {
         this.nextPageToken = links.nextPageToken;
         this.links = this.links.concat(links.items);
       },

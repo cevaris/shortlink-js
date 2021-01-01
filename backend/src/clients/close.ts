@@ -11,16 +11,16 @@ export function closeClientsOnExit(server: Server) {
         server.close(async () => {
             try {
                 await pubSubClient.close();
-                logger.error('pub/sub client closed');
+                logger.info('pub/sub client successfully closed.');
             } catch (error) {
-                logger.error('could not close pub/sub client', error);
+                logger.error('failed to close pub/sub client', error);
             }
 
             try {
                 await firebaseDb.terminate();
-                logger.error('firebase client closed');
+                logger.info('firebase client successfully closed.');
             } catch (error) {
-                logger.error('could not close firebase client', error);
+                logger.error('failed to close firebase client', error);
             }
         });
     }
