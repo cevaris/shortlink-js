@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -13,12 +15,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
 import { LinkCreateComponent } from './link-create/link-create.component';
 import { LinkFormComponent } from './link-create/link-form/link-form.component';
 import { LinkRedirectComponent } from './link-redirect/link-redirect.component';
 import { LinkViewComponent } from './link-view/link-view.component';
-import {MatCardModule} from '@angular/material/card'; 
-import { HomeComponent } from './home/home.component';
+import { LinkCardComponent } from './shared/link-card/link-card.component';
 
 // https://angular.io/guide/router
 const appRoutes: Routes = [
@@ -36,6 +38,7 @@ const appRoutes: Routes = [
     LinkCreateComponent,
     LinkRedirectComponent,
     HomeComponent,
+    LinkCardComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -45,11 +48,12 @@ const appRoutes: Routes = [
     HttpClientModule,
     MatButtonModule,
     MatCardModule,
-    MatSnackBarModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     MatToolbarModule,
     ReactiveFormsModule,
   ],

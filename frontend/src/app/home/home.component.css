@@ -1,0 +1,8 @@
+.mat-list-item {
+  height: auto;
+  margin: 10px;
+}
+
+app-link-card {
+  width: 100%;
+}
