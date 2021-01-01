@@ -126,7 +126,7 @@ router.get('/links/:id.json', async (req: express.Request, res: express.Response
 
 router.get('/links.json', async (req: express.Request, res: express.Response) => {
     try {
-        const links = await linkDb.scan(10, 'desc');
+        const links = await linkDb.scan(new Date(), 10);
         // return respond<ApiLink>(res, {
         //     data: {
         //         kind: ApiKind.Link,
