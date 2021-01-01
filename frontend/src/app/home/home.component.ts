@@ -29,4 +29,10 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 }
