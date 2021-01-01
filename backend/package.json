@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "./node_modules/.bin/tsc && gcloud app deploy --project=project-id-shortlink",
+    "deploy": "./node_modules/.bin/tsc && echo 'y' | gcloud app deploy --project=project-id-shortlink",
     "dev": "nodemon src/index.ts",
     "test": "jest"
   },

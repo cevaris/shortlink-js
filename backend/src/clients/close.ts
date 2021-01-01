@@ -28,5 +28,8 @@ export function closeClientsOnExit(server: Server) {
     process.on('SIGINT', close);  // CTRL+c
     process.on('SIGTERM', close); // Node shutdown
     process.on('SIGQUIT', close); // CTRL+\
+    // https://stackoverflow.com/a/14032965/3538289
+    process.on('SIGUSR1', close); // nodemon
+    process.on('SIGUSR2', close); // nodemon
     process.on('uncaughtException', close);
 }
