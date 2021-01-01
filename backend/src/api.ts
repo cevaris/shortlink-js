@@ -13,6 +13,7 @@ export enum ApiKind {
 export enum ApiLocation {
     Link = 'link',
     Limit = 'limit',
+    Token = 'token',
 }
 
 export enum ApiLocationType {
@@ -53,4 +54,3 @@ export function toApiLink(link: Link): ApiLink {
         created_at: link.createdAt.toISOString(),
     }
 }
-

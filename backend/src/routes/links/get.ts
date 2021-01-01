@@ -1,40 +1,85 @@
 import express from 'express';
-import { ApiKind, ApiLink, ApiReason, toApiLink } from '../../api';
+import { ApiKind, ApiLink, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../../api';
 import { respond } from '../../http/responses';
 import { linkDb } from '../../storage/linkDb';
+import { Link } from '../../types';
 
 const router = express.Router();
 
 router.get('/links.json', async (req: express.Request, res: express.Response) => {
-    const token: Date = req.query?.token ?
-        new Date(Date.parse(req.query?.token?.toString())) : new Date();
+    if (!req.query?.token) {
+        const message = `missing token parameter.`;
+        return respond(res, {
+            error: {
+                code: 400,
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Token,
+                    message: message,
+                }]
+            }
+        });
+    }
 
+    const token: Date = new Date(Date.parse(req.query?.token?.toString()));
+    if (token.toString() === 'Invalid Date') {
+        const message = `token "${req.query.token}" is invalid. Please use an ISO-8601 format (ex. 2019-10-11T18:56:08.984Z).`;
+        return respond(res, {
+            error: {
+                code: 400,
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Token,
+                    message: message,
+                }]
+            }
+        });
+    }
 
-    const defaultLimit = 10;
-    // const limit: number = req.query?.limit && !Number.isNaN(req.query?.limit) ?
-    //     parseInt(req.query?.limit?.toString()) : 10;
-    // const limit = req.query?.limit ? parseInt(req.query?.limit?.toString()) : NaN;
-    // if (isNaN(limit) || limit < 1 || limit > 10) {
-    //     const message = `invalid "limit" value ${req.query.limit}. "limit" value must be > 0 and <= 10.`;
-    //     return respond(res, {
-    //         error: {
-    //             code: 400,
-    //             message: message,
-    //             errors: [{
-    //                 reason: ApiReason.Invalid,
-    //                 locationType: ApiLocationType.Parameter,
-    //                 location: ApiLocation.Limit,
-    //                 message: message,
-    //             }]
-    //         }
-    //     });
-    // }
+    if (!req.query?.limit) {
+        const message = `missing limit parameter.`;
+        return respond(res, {
+            error: {
+                code: 400,
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Limit,
+                    message: message,
+                }]
+            }
+        });
+    }
+
+    const maxLimit = 20;
+    const limit = parseInt(req.query?.limit?.toString());
+    if (isNaN(limit) || limit < 1 || limit > maxLimit) {
+        const message = `invalid "limit" value ${req.query.limit}. "limit" value must be > 0 and <= ${maxLimit}.`;
+        return respond(res, {
+            error: {
+                code: 400,
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    locationType: ApiLocationType.Parameter,
+                    location: ApiLocation.Limit,
+                    message: message,
+                }]
+            }
+        });
+    }
 
     try {
-        const links = await linkDb.scan(token, defaultLimit);
-        // extract last Link.createdAt value
-        const nextToken = links.slice(-1)[0]?.createdAt?.toISOString() || null;
-        const apiLinks = links.map(toApiLink);
+        const links: Link[] = await linkDb.scan(token, limit);
+        // extract last Link.createdAt value to find nextToken
+        const nextToken: string | null = links.length === limit ?
+            links.slice(-1)[0]?.createdAt?.toISOString() : null;
+        const apiLinks: ApiLink[] = links.map(toApiLink);
 
         respond<ApiLink>(res, {
             data: {

@@ -2,12 +2,14 @@ import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../../../src/app';
-import { linkDb, StorageNotFoundError } from '../../../src/storage/linkDb';
-import { Link } from '../../../src/types';
+import { linkDb } from '../../../src/storage/linkDb';
 
 let server: http.Server;
 const spyLinkDbScan = jest.spyOn(linkDb, 'scan');
-const FrozenDate = new Date(Date.parse('2000-01-02T03:04:05.006Z'));
+
+const TestDateStr = '2000-01-02T03:04:05.006Z';
+const TestDate = new Date(Date.parse(TestDateStr));
+const AfterTestDate = new Date(Date.parse('2001-01-01T00:00:00.00Z'));
 
 beforeAll((done) => {
     server = app.listen(done);
@@ -19,57 +21,60 @@ afterAll(async (done) => {
 
 beforeEach(() => {
     jest.clearAllMocks();
-    jest.useFakeTimers('modern');
-    jest.setSystemTime(FrozenDate);
 })
 
-afterEach(() => {
-    jest.useRealTimers();
-})
-
-test('existing id returns 200', async () => {
-    const link: Link = { id: 'TEST', link: 'http://link.com', createdAt: new Date() };
-    spyLinkDbScan.mockResolvedValue([link]);
+test('when links present returns 200', async () => {
+    const links = [
+        { id: 'one', link: 'http://example.com', createdAt: AfterTestDate },
+        { id: 'two', link: 'http://link.com', createdAt: TestDate },
+    ];
+    spyLinkDbScan.mockResolvedValue(links);
 
     const resp = await request(server)
-        .get(`/links.json`);
+        .get(`/links.json?token=${TestDateStr}&limit=2`);
 
-    expect(spyLinkDbScan).toBeCalledWith(FrozenDate, 10);
-    expect(resp.status).toBe(200);
+    expect(spyLinkDbScan).toBeCalledWith(TestDate, 2);
     expect(resp.body).toStrictEqual({
         data: {
             kind: 'link',
-            next_page_token: FrozenDate.toISOString(),
-            items: [{
-                id: link.id,
-                link: link.link,
-                created_at: link.createdAt.toISOString(),
-            }],
+            next_page_token: TestDate.toISOString(),
+            items: [
+                { id: 'one', link: 'http://example.com', created_at: AfterTestDate.toISOString() },
+                { id: 'two', link: 'http://link.com', created_at: TestDate.toISOString() },
+            ],
         }
     });
+    expect(resp.status).toBe(200);
 });
 
-test.skip('if link does not exist returns 404', async () => {
-    const id = 'TEST'
-    const testMessage = `link "${id}" not found`;
-    const storageNotFound = new StorageNotFoundError(testMessage);
-    spyLinkDbScan.mockRejectedValue(storageNotFound);
+test('invalid token value', async () => {
+    await request(server).get(`/links.json?&limit=10`).expect(400);
+    await request(server).get(`/links.json?token=invalid-date&limit=10`).expect(400);
+    await request(server).get(`/links.json?token=invalid-date&limit=10`).expect(400);
+});
+
+test('invalid limit value', async () => {
+    await request(server).get(`/links.json?token=${TestDateStr}`).expect(400);
+    await request(server).get(`/links.json?token=${TestDateStr}&limit=-1`).expect(400);
+    await request(server).get(`/links.json?token=${TestDateStr}&limit=11`).expect(400);
+    await request(server).get(`/links.json?token=${TestDateStr}&limit=invalid-number`).expect(400);
+});
+
+test('no links return 200', async () => {
+    spyLinkDbScan.mockResolvedValue([]);
 
     const resp = await request(server)
-        .get(`/links/${id}.json`);
+        .get(`/links.json?token=${TestDateStr}&limit=10`);
 
-    expect(spyLinkDbScan).toBeCalledWith('TEST');
-    expect(resp.status).toBe(404);
     expect(resp.body).toStrictEqual({
-        error: {
-            code: 404,
-            message: testMessage,
-            errors: [{
-                reason: 'notFound',
-                message: testMessage,
-            }]
+        data: {
+            kind: 'link',
+            next_page_token: null,
+            items: [],
         }
     });
+    expect(spyLinkDbScan).toBeCalledWith(TestDate, 10);
+    expect(resp.status).toBe(200);
 });
 
 test.skip('unexpected error returns 503', async () => {
