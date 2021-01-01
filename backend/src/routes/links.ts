@@ -124,4 +124,28 @@ router.get('/links/:id.json', async (req: express.Request, res: express.Response
     }
 });
 
+router.get('/links.json', async (req: express.Request, res: express.Response) => {
+    try {
+        const links = await linkDb.scan(10, 'desc');
+        // return respond<ApiLink>(res, {
+        //     data: {
+        //         kind: ApiKind.Link,
+        //         items: [toApiLink(link)],
+        //     }
+        // })
+        res.json(links);
+    } catch (error) {
+        return respond(res, {
+            error: {
+                code: 503,
+                message: error.message,
+                errors: [{
+                    reason: ApiReason.Error,
+                    message: error.message,
+                }]
+            }
+        });
+    }
+});
+
 module.exports = router;

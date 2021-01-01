@@ -8,6 +8,7 @@ type SideEffect<T> = (t: T) => Promise<void>
 export interface LinkDb {
     create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link>
     get(id: string): Promise<Link>
+    scan(n: number, direction: 'asc' | 'desc'): Promise<Array<Link>>
 }
 
 export class StorageNotFoundError extends Error {
@@ -70,7 +71,7 @@ class LinkFirestore implements LinkDb {
     }
 
     async get(id: string): Promise<Link> {
-        const query = firebaseDb.collection('links').doc(id)
+        const query = firebaseDb.collection('links').doc(id);
         const doc = await query.get();
 
         if (!doc.exists || !doc.data()) {
@@ -84,6 +85,24 @@ class LinkFirestore implements LinkDb {
         }
 
         throw Error(`link is missing data ${record}`);
+    }
+
+    async scan(n: number, direction: 'asc' | 'desc'): Promise<Array<Link>> {
+        const result = await firebaseDb.collection('links')
+            .orderBy('created_at', direction)
+            .limit(n)
+            .get();
+
+        const links = new Array<Link>();
+
+        result.docs.forEach(doc => {
+            const record = doc.data() as RecordLink;
+            if (record.id && record.link && record.created_at) {
+                links.push(toLink(record));
+            }
+        });
+
+        return links;
     }
 }
 
