@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -21,11 +22,15 @@ export class LinkViewComponent implements OnInit {
   constructor(
     private linkService: LinksService,
     private route: ActivatedRoute,
-    private snackbar: MatSnackBar) { }
+    private snackbar: MatSnackBar,
+    private title: Title) {
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id === '') return;
+
+    this.title.setTitle(`ShortLink - ${id}`);
 
     this.link$ = this.linkService.get(id).pipe(
       finalize(() => this.loading = false)
