@@ -1,36 +1,3 @@
-// export interface ApiLink {
-//     id: string
-//     link: string
-//     created_at: string
-// }
-
-// export enum ApiLocationType {
-//     Parameter = 'parameter',
-// }
-
-// export interface ApiError {
-//     reason: string
-//     message: string
-//     locationType: ApiLocationType,
-//     location: string
-// }
-
-// export enum ApiKind {
-//     Link = 'link',
-// }
-
-// export interface ApiResponse<T> {
-//     data?: {
-//         kind: string
-//         items: Array<T>
-//     }
-//     error?: {
-//         code: number
-//         message?: string
-//         errors?: [ApiError]
-//     }
-// }
-
 export interface ApiLink {
     id: string
     link: string
