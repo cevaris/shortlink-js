@@ -56,7 +56,7 @@ test('invalid token value', async () => {
 test('invalid limit value', async () => {
     await request(server).get(`/links.json?token=${TestDateStr}`).expect(400);
     await request(server).get(`/links.json?token=${TestDateStr}&limit=-1`).expect(400);
-    await request(server).get(`/links.json?token=${TestDateStr}&limit=11`).expect(400);
+    await request(server).get(`/links.json?token=${TestDateStr}&limit=21`).expect(400);
     await request(server).get(`/links.json?token=${TestDateStr}&limit=invalid-number`).expect(400);
 });
 
@@ -77,15 +77,13 @@ test('no links return 200', async () => {
     expect(resp.status).toBe(200);
 });
 
-test.skip('unexpected error returns 503', async () => {
+test('unexpected error returns 503', async () => {
     const testMessage = 'this is a test.';
     spyLinkDbScan.mockRejectedValue(Error(testMessage));
 
     const resp = await request(server)
-        .get('/links/TEST.json');
+        .get(`/links.json?token=${TestDateStr}&limit=10`);
 
-    expect(spyLinkDbScan).toBeCalledWith('TEST');
-    expect(resp.status).toBe(503);
     expect(resp.body).toStrictEqual({
         error: {
             code: 503,
@@ -96,4 +94,6 @@ test.skip('unexpected error returns 503', async () => {
             }]
         }
     });
+    expect(spyLinkDbScan).toBeCalledWith(TestDate, 10);
+    expect(resp.status).toBe(503);
 });
