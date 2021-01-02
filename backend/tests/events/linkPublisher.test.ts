@@ -45,6 +45,7 @@ test('re-throws errors on failure', async () => {
                 }
             })
         );
+        fail('linkPublisher.publishCreateEvent should have failed.');
     } catch (error) {
         expect(error.message).toBe(errorMessage);
     }
