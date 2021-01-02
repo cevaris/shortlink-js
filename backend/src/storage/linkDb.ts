@@ -4,7 +4,7 @@ import { logger } from "../logger";
 import { Link } from '../types';
 import { newId } from './id';
 
-type SideEffect<T> = (t: T) => Promise<void>
+export type SideEffect<T> = (t: T) => Promise<void>
 
 export interface LinkDb {
     create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link>

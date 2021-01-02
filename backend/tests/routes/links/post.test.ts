@@ -2,13 +2,17 @@ import { afterAll, afterEach, beforeAll, expect, test } from '@jest/globals';
 import http from 'http';
 import request from 'supertest';
 import { app } from '../../../src/app';
+import { linkPublisher } from '../../../src/events/linksPublisher';
 import { httpStatus } from '../../../src/http/status';
-import { linkDb } from '../../../src/storage/linkDb';
+import { proto } from '../../../src/proto';
+import { toLinkCreateEvent } from '../../../src/proto/conv';
+import { linkDb, SideEffect } from '../../../src/storage/linkDb';
 import { Link } from '../../../src/types';
 
 let server: http.Server;
 const spyLinkDbCreate = jest.spyOn(linkDb, 'create');
 const spyHttpStatusGet = jest.spyOn(httpStatus, 'get');
+const spyPublishCreateEvent = jest.spyOn(linkPublisher, 'publishCreateEvent');
 
 beforeAll((done) => {
     server = app.listen(done);
@@ -44,9 +48,14 @@ test('missing link json body field returns 400', async () => {
     expect(resp.status).toBe(400);
 });
 
-test('existing id returns 200', async () => {
+test('create new link returns 200', async () => {
     const link: Link = { id: 'TEST', link: 'http://link.com', createdAt: new Date() };
-    spyLinkDbCreate.mockResolvedValue(link);
+
+    spyLinkDbCreate.mockImplementation(
+        async (linkUrl: string, sideEffect: SideEffect<Link>) => {
+            await sideEffect(link);
+            return Promise.resolve(link);
+        });
     spyHttpStatusGet.mockResolvedValue(200);
 
     const resp = await request(server)
@@ -65,6 +74,7 @@ test('existing id returns 200', async () => {
         }
     });
 
+    expect(spyPublishCreateEvent).toBeCalledWith(toLinkCreateEvent(link));
     expect(spyLinkDbCreate).toBeCalledWith(link.link, expect.any(Function));
     expect(spyHttpStatusGet).toBeCalledWith(link.link);
 });
