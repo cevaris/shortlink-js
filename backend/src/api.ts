@@ -1,4 +1,4 @@
-import { Link } from "./types";
+import { Link } from "../tests/types";
 
 export interface ApiLink {
     id: string

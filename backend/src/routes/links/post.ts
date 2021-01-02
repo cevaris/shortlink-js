@@ -6,7 +6,7 @@ import { httpStatus } from '../../http/status';
 import { isValidLink } from '../../http/valid';
 import { toLinkCreateEvent } from '../../proto/conv';
 import { linkDb } from '../../storage/linkDb';
-import { Link } from '../../types';
+import { Link } from '../../../tests/types';
 
 const router = express.Router();
 

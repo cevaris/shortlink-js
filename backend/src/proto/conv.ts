@@ -1,6 +1,6 @@
 import { Message } from "@google-cloud/pubsub";
 import { proto } from "../proto";
-import { Link } from "../types";
+import { Link } from "../../tests/types";
 
 /**
  * Verifies and decodes Message bytes into LinkEvent.

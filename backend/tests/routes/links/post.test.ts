@@ -6,7 +6,7 @@ import { linkPublisher } from '../../../src/events/linksPublisher';
 import { httpStatus } from '../../../src/http/status';
 import { toLinkCreateEvent } from '../../../src/proto/conv';
 import { linkDb, SideEffect } from '../../../src/storage/linkDb';
-import { Link } from '../../../src/types';
+import { Link } from '../../types';
 
 let server: http.Server;
 const spyLinkDbCreate = jest.spyOn(linkDb, 'create');

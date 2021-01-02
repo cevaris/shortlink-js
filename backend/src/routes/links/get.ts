@@ -2,7 +2,7 @@ import express from 'express';
 import { ApiKind, ApiLink, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../../api';
 import { respond } from '../../http/responses';
 import { linkDb } from '../../storage/linkDb';
-import { Link } from '../../types';
+import { Link } from '../../../tests/types';
 
 const router = express.Router();
 

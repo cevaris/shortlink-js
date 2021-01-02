@@ -3,7 +3,7 @@ import http from 'http';
 import request from 'supertest';
 import { app } from '../../../src/app';
 import { linkDb, StorageNotFoundError } from '../../../src/storage/linkDb';
-import { Link } from '../../../src/types';
+import { Link } from '../../types';
 
 let server: http.Server;
 const spyLinkDbGet = jest.spyOn(linkDb, 'get');

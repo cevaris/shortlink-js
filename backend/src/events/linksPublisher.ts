@@ -5,16 +5,15 @@ import { proto } from "../proto";
 import { encodeLikeEvent } from "../proto/conv";
 
 export interface LinkPublisher {
+    publishLinkEvent(event: proto.LinkEvent): Promise<void>
     publishCreateEvent(event: proto.LinkCreateEvent): Promise<void>
 }
 
 class GooglePubSubLinkPublisher implements LinkPublisher {
-    private publisher: Topic;
-
+    publisher: Topic
     constructor() {
         this.publisher = pubSubClient.topic('link_events_prod');
     }
-
     async publishCreateEvent(event: proto.LinkCreateEvent): Promise<void> {
         const linkEvent: proto.LinkEvent = proto.LinkEvent.create({
             linkCreateEvent: event

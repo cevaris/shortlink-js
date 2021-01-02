@@ -1,7 +1,6 @@
 import { DocumentReference, GrpcStatus, Timestamp, Transaction } from "@google-cloud/firestore";
+import { Link } from '../../tests/types';
 import { firebaseDb } from '../clients/firebaseClient';
-import { logger } from "../logger";
-import { Link } from '../types';
 import { newId } from './id';
 
 export type SideEffect<T> = (t: T) => Promise<void>

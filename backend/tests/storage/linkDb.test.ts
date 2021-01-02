@@ -8,7 +8,7 @@ import { linkDb } from '../../src/storage/linkDb';
 
 //     const create = jest.fn();
 //     const doc = jest.fn(() => ({ create }));
-//     const collection = jest
+//     const     = jest
 //         .spyOn(firebaseDb, 'collection')
 //         .mockReturnValue((({ doc }) as any));
 //     create.mockReturnValue({});
