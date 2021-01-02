@@ -4,7 +4,6 @@ import request from 'supertest';
 import { app } from '../../../src/app';
 import { linkPublisher } from '../../../src/events/linksPublisher';
 import { httpStatus } from '../../../src/http/status';
-import { proto } from '../../../src/proto';
 import { toLinkCreateEvent } from '../../../src/proto/conv';
 import { linkDb, SideEffect } from '../../../src/storage/linkDb';
 import { Link } from '../../../src/types';
@@ -79,54 +78,7 @@ test('create new link returns 200', async () => {
     expect(spyHttpStatusGet).toBeCalledWith(link.link);
 });
 
-// test('link fails validation returns 400', async () => {
-//     const link = 'http://example.com';
-
-//     // mock http status returns 404/NotFound
-//     spyHttpStatusGet.mockResolvedValue(404);
-
-//     const resp = await request(server)
-//         .post('/links.json')
-//         .send({ 'link': link });
-
-//     expect(spyLinkDbCreate.mock.calls).toEqual([]);
-//     expect(spyHttpStatusGet.mock.calls).toEqual([[link]]);
-
-//     expect(resp.status).toBe(400);
-//     expect(resp.body).toEqual({
-//         kind: 'error',
-//         message: `link "${link}" failed validation, link returned 404 HTTP status code.`,
-//     });
-// });
-
-
-test('error when validating link returns 503', async () => {
-    const link = 'http://example.com';
-    const errorMessage = 'this is a test error';
-    spyHttpStatusGet.mockRejectedValue(Error(errorMessage));
-
-    const resp = await request(server)
-        .post('/links.json')
-        .send({ 'link': link });
-
-    const testMessage = `failed to validate "${link} link": ${errorMessage}.`;
-    expect(resp.body).toStrictEqual({
-        error: {
-            code: 503,
-            message: testMessage,
-            errors: [{
-                reason: 'error',
-                message: testMessage,
-            }]
-        }
-    });
-    expect(spyLinkDbCreate).not.toBeCalled()
-    expect(spyHttpStatusGet).toBeCalledWith(link);
-
-    expect(resp.status).toBe(503);
-});
-
-test('failed to create link returns 503', async () => {
+test('failed to create link due to publish or database failure returns 503', async () => {
     const link = 'http://example.com';
     const errorMessage = 'this is a test error';
     spyLinkDbCreate.mockRejectedValue(Error(errorMessage));
@@ -150,4 +102,54 @@ test('failed to create link returns 503', async () => {
     expect(spyLinkDbCreate).toBeCalledWith(link, expect.any(Function));
     expect(spyHttpStatusGet).toBeCalledWith(link);
     expect(resp.status).toBe(503);
+});
+
+test('error when validating link returns 503', async () => {
+    const link = 'http://example.com';
+    const errorMessage = 'this is a test error';
+    spyHttpStatusGet.mockRejectedValue(Error(errorMessage));
+
+    const resp = await request(server)
+        .post('/links.json')
+        .send({ 'link': link });
+
+    const testMessage = `failed to validate "${link} link": ${errorMessage}.`;
+    expect(resp.body).toStrictEqual({
+        error: {
+            code: 503,
+            message: testMessage,
+            errors: [{
+                reason: 'error',
+                message: testMessage,
+            }]
+        }
+    });
+    expect(spyLinkDbCreate).not.toBeCalled()
+    expect(spyHttpStatusGet).toBeCalledWith(link);
+    expect(resp.status).toBe(503);
+});
+
+test('regex invalid link returns 400', async () => {
+    const link = 'malformed link url';
+
+    const resp = await request(server)
+        .post('/links.json')
+        .send({ 'link': link });
+
+    const testMessage = `link "${link}" is not a valid URL. (Please include protocol; ex. https://).`;
+    expect(resp.body).toStrictEqual({
+        error: {
+            code: 400,
+            message: testMessage,
+            errors: [{
+                reason: 'invalid',
+                location: 'link',
+                location_type: 'parameter',
+                message: testMessage,
+            }]
+        }
+    });
+    expect(spyLinkDbCreate).not.toBeCalled()
+    expect(spyHttpStatusGet).not.toBeCalled();
+    expect(resp.status).toBe(400);
 });
