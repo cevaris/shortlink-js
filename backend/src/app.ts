@@ -20,6 +20,6 @@ app.use(cors(corsOptions));
 
 // import routes
 app.use(require('./routes/root'));
-app.use(require('./routes/links'));
 app.use(require('./routes/links/get'));
 app.use(require('./routes/links/getById'));
+app.use(require('./routes/links/post'));

@@ -30,7 +30,7 @@ export enum ApiReason {
 export interface ApiError {
     reason: ApiReason
     message: string
-    locationType?: ApiLocationType,
+    location_type?: ApiLocationType,
     location?: ApiLocation
 }
 

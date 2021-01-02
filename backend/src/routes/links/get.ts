@@ -15,7 +15,7 @@ router.get('/links.json', async (req: express.Request, res: express.Response) =>
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Token,
                     message: message,
                 }]
@@ -32,7 +32,7 @@ router.get('/links.json', async (req: express.Request, res: express.Response) =>
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Token,
                     message: message,
                 }]
@@ -48,7 +48,7 @@ router.get('/links.json', async (req: express.Request, res: express.Response) =>
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Limit,
                     message: message,
                 }]
@@ -66,7 +66,7 @@ router.get('/links.json', async (req: express.Request, res: express.Response) =>
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Limit,
                     message: message,
                 }]

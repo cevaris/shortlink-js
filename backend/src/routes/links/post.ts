@@ -1,12 +1,12 @@
 import express from 'express';
-import { ApiKind, ApiLink, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../api';
-import { linkPublisher } from '../events/linksPublisher';
-import { respond } from '../http/responses';
-import { httpStatus } from '../http/status';
-import { isValidLink } from '../http/valid';
-import { toLinkCreateEvent } from '../proto/conv';
-import { linkDb, StorageNotFoundError } from '../storage/linkDb';
-import { Link } from '../types';
+import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../../api';
+import { linkPublisher } from '../../events/linksPublisher';
+import { respond } from '../../http/responses';
+import { httpStatus } from '../../http/status';
+import { isValidLink } from '../../http/valid';
+import { toLinkCreateEvent } from '../../proto/conv';
+import { linkDb } from '../../storage/linkDb';
+import { Link } from '../../types';
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.post('/links.json', async (req: express.Request, res: express.Response) =
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Link,
                     message: message,
                 }]
@@ -37,7 +37,7 @@ router.post('/links.json', async (req: express.Request, res: express.Response) =
                 message: message,
                 errors: [{
                     reason: ApiReason.Invalid,
-                    locationType: ApiLocationType.Parameter,
+                    location_type: ApiLocationType.Parameter,
                     location: ApiLocation.Link,
                     message: message,
                 }]
@@ -50,10 +50,10 @@ router.post('/links.json', async (req: express.Request, res: express.Response) =
         await httpStatus.get(linkURL);
         // if does not throw, the link resolved.
     } catch (error) {
-        const message = `server failed to validate "${linkURL} link": ${error.message}.`;
+        const message = `failed to validate "${linkURL} link": ${error.message}.`;
         return respond(res, {
             error: {
-                code: 500,
+                code: 503,
                 message: message,
                 errors: [{
                     reason: ApiReason.Error,
