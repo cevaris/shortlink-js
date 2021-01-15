@@ -1,21 +1,21 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>
-            <div>
-                <a href="{{frontendDomain}}/{{link.id}}">
-                    {{frontendDomain}}/{{link.id}}
-                </a>
-            </div>
-        </mat-card-title>
-        <mat-card-subtitle>
-            {{
-            (link.link.length > 65) ?
-            (link.link | slice:0:65)+'..' : (link.link)
-            }}
-        </mat-card-subtitle>
+        <div class="mat-card-header-text">
+            <mat-card-title>
+                {{redirectDomain}}/{{link.id}}
+                <button mat-button (click)="copyToClipboard($event)">
+                    <span class="material-icons">content_copy</span>
+                </button>
+            </mat-card-title>
+            <mat-card-subtitle>
+                {{
+                (link.link.length > 65) ?
+                (link.link | slice:0:65)+'..' : (link.link)
+                }}
+            </mat-card-subtitle>
+        </div>
     </mat-card-header>
-    <mat-card-content style="padding-left: 15px;">
-        <br />
+    <mat-card-content>
         Created At: {{link.created_at}}
     </mat-card-content>
 </mat-card>

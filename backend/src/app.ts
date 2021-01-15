@@ -23,3 +23,4 @@ app.use(require('./routes/root'));
 app.use(require('./routes/links/get'));
 app.use(require('./routes/links/getById'));
 app.use(require('./routes/links/post'));
+app.use(require('./routes/redirect'));

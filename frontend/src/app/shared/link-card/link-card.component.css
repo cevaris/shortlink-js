@@ -1,0 +1,12 @@
+.mat-card-header-text {
+  width: 100%;
+}
+
+mat-card-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+mat-card-content {
+  padding-left: 45px;
+}

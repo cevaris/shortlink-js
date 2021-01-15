@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiDomain: 'http://localhost:3000',
-  frontendDomain: 'http://localhost:4200',
+  redirectDomain: 'http://localhost:3000',
 };
 
 /*

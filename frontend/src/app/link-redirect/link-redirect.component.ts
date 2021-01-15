@@ -34,8 +34,6 @@ export class LinkRedirectComponent implements OnInit {
       (link) => {
         // redirect to external web site
         window.location.href = link.link;
-        // window.history.replaceState(myHistory, "<name>", "<url>");
-        // this.router.navigateByUrl(link.link, { replaceUrl: true })
       },
       (error: HttpErrorResponse) => {
         const apiError = error.error.error as ApiError;

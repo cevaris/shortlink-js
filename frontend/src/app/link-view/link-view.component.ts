@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +11,8 @@ import { ApiError, ApiLink } from '../types';
 @Component({
   selector: 'app-link-view',
   templateUrl: './link-view.component.html',
-  styleUrls: ['./link-view.component.css']
+  styleUrls: ['./link-view.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LinkViewComponent implements OnInit {
 
