@@ -20,7 +20,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LinkCreateComponent } from './link-create/link-create.component';
 import { LinkFormComponent } from './link-create/link-form/link-form.component';
-import { LinkRedirectComponent } from './link-redirect/link-redirect.component';
 import { LinkViewComponent } from './link-view/link-view.component';
 import { LinkCardComponent } from './shared/link-card/link-card.component';
 
@@ -28,7 +27,6 @@ import { LinkCardComponent } from './shared/link-card/link-card.component';
 const appRoutes: Routes = [
   { path: 'links', component: LinkCreateComponent },
   { path: 'links/:id', component: LinkViewComponent },
-  { path: ':id', component: LinkRedirectComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
 ];
 
@@ -38,7 +36,6 @@ const appRoutes: Routes = [
     LinkFormComponent,
     LinkViewComponent,
     LinkCreateComponent,
-    LinkRedirectComponent,
     HomeComponent,
     LinkCardComponent,
   ],
