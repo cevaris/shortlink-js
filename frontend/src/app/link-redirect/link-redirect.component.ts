@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { LinksService } from '../links.service';
@@ -21,6 +21,7 @@ export class LinkRedirectComponent implements OnInit {
   constructor(
     private linkService: LinksService,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private snackbar: MatSnackBar
   ) { }
 
@@ -33,6 +34,8 @@ export class LinkRedirectComponent implements OnInit {
       (link) => {
         // redirect to external web site
         window.location.href = link.link;
+        // window.history.replaceState(myHistory, "<name>", "<url>");
+        // this.router.navigateByUrl(link.link, { replaceUrl: true })
       },
       (error: HttpErrorResponse) => {
         const apiError = error.error.error as ApiError;

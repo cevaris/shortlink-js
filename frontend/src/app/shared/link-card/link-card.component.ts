@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiLink } from 'src/app/types';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-link-card',
@@ -8,11 +9,14 @@ import { ApiLink } from 'src/app/types';
 })
 export class LinkCardComponent implements OnInit {
 
+  public frontendDomain: string;
+
   @Input() link: ApiLink;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.frontendDomain = environment.frontendDomain;
   }
+
+  ngOnInit(): void { }
 
 }

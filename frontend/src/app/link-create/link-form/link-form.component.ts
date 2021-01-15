@@ -55,7 +55,7 @@ export class LinkFormComponent implements OnInit {
         },
         (httpError: HttpErrorResponse) => {
           httpError.error.error?.errors.forEach((error: ApiError) => {
-            if (error.locationType === ApiLocationType.Parameter && error.location) {
+            if (error.location_type === ApiLocationType.Parameter && error.location) {
               this.linkForm.get(error.location).setErrors({ [error.reason]: error.message });
             } else if (error.message) {
               this.formError = error.message;

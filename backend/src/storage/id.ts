@@ -6,8 +6,8 @@ export function newId(len: number) {
         throw Error(`invalid "id" length "${len}".`);
     }
 
-    var result = '';
-    for (var i = 0; i < len; i++) {
+    let result = '';
+    for (let i = 0; i < len; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 

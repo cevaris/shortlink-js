@@ -5,9 +5,9 @@
         <div infiniteScroll [infiniteScrollThrottle]="50"
             (scrolled)="onScroll()">
             <mat-list>
-                <mat-list-item *ngFor="let link of links"
-                    routerLink="/links/{{link.id}}">
-                    <app-link-card [link]="link"></app-link-card>
+                <mat-list-item *ngFor="let link of links">
+                    <app-link-card [link]="link"
+                        routerLink="/links/{{link.id}}"></app-link-card>
                 </mat-list-item>
             </mat-list>
         </div>
