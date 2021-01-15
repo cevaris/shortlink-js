@@ -1,8 +1,10 @@
 <mat-card>
     <mat-card-header>
+        <!-- https://stackoverflow.com/a/43482040/3538289 -->
         <div class="mat-card-header-text">
             <mat-card-title>
-                {{redirectDomain}}/{{link.id}}
+                <a class="link"
+                    (click)="navigateToLink($event)">{{redirectDomain}}/{{link.id}}</a>
                 <button mat-button (click)="copyToClipboard($event)">
                     <span class="material-icons">content_copy</span>
                 </button>

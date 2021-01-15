@@ -10,3 +10,7 @@ mat-card-title {
 mat-card-content {
   padding-left: 45px;
 }
+
+.link {
+  cursor: pointer; 
+}

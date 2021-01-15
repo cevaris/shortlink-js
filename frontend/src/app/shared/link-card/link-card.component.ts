@@ -36,4 +36,9 @@ export class LinkCardComponent implements OnInit {
     $event.stopPropagation();
   }
 
+  navigateToLink($event: MouseEvent) {
+    window.location.href = this.link.link;
+    // prevent navigation/redirection
+    $event.stopPropagation();
+  }
 }
