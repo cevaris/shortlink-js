@@ -11,7 +11,7 @@ test('invalid length throws error', () => {
         fail('should not have gotten here');
     } catch (error) {
         expect(error.message).toBe(
-            `invalid newId length "-10".`
+            `invalid "id" length "-10".`
         );
     }
 });
