@@ -1,55 +1,13 @@
+/* https://stackoverflow.com/a/56606596/3538289 */
+:host {
+  width: 100%;
+}
+
 :host /deep/ .mat-card-header-text {
   margin: 0;
-  width: 100%;
+  /* width: 100%; */
 }
-
-app-link-card {
-  /* padding: 0px; */
-  width: 100%;
-}
-
-/* mat-card {
-  max-width: 500px;
-} */
-
-/* https://stackoverflow.com/a/43482040/3538289 */
-/* .mat-card-header-text {
-  width: 100%;
-} */
-
-/* 
-mat-card-title {
-  display: flex;
-  justify-content: space-between;
-} */
-
-/* mat-card-header {
-  padding-left: -45px;
-}
-
-mat-card-subtitle {
-  padding-left: -45px;
-} */
-
-/* mat-card-content {
-  padding-left: 45px;
-} */
 
 .link {
   cursor: pointer;
 }
-
-/* .text-one-line { */
-/* white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; */
-
-/* word-break: break-all;
-  white-space: pre-wrap; */
-
-/* width: 300px; */
-/* max-width: 200px; */
-/* white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; */
-/* } */
