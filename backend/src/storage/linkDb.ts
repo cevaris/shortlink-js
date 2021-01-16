@@ -1,6 +1,7 @@
 import { DocumentReference, GrpcStatus, Timestamp, Transaction } from "@google-cloud/firestore";
 import { Link } from '../../tests/types';
-import { firebaseDb } from '../clients/firebaseClient';
+import { firebaseDb } from "../clients/firebaseClient";
+// import { factory } from "../clients/firebaseClient";
 import { newId } from './id';
 
 export type SideEffect<T> = (t: T) => Promise<void>
@@ -25,7 +26,23 @@ interface RecordLink {
     created_at: Timestamp
 }
 
-class LinkFirestore implements LinkDb {
+function toLink(record: RecordLink): Link {
+    return {
+        id: record.id,
+        link: record.link,
+        createdAt: record.created_at.toDate(),
+    }
+}
+
+/**
+ * Exported for testing only
+ */
+export class LinkFirestore implements LinkDb {
+    private db: FirebaseFirestore.Firestore;
+
+    constructor(db: FirebaseFirestore.Firestore) {
+        this.db = db;
+    }
     /**
      * @see {Link}
      * This is a complex function:
@@ -39,14 +56,11 @@ class LinkFirestore implements LinkDb {
      * @param sideEffect Function containing side effects to execute after link is persisted.
      */
     async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
-        console.log('one');
         try {
-            return await firebaseDb.runTransaction<Link>(
+            return await this.db.runTransaction<Link>(
                 async (transaction: Transaction) => {
-                    console.log('two', transaction);
                     const id: string = newId(6);
-                    const doc: DocumentReference = firebaseDb.collection('links').doc(id);
-                    console.log('three', doc);
+                    const doc: DocumentReference = this.db.collection('links').doc(id);
                     const now: Date = new Date();
 
                     const record: RecordLink = {
@@ -55,6 +69,8 @@ class LinkFirestore implements LinkDb {
                         created_at: Timestamp.fromDate(now),
                     };
 
+                    console.log(transaction);
+                    // transaction.create(doc, record);
                     transaction.create(doc, record);
 
                     const link: Link = toLink(record);
@@ -74,7 +90,7 @@ class LinkFirestore implements LinkDb {
     }
 
     async get(id: string): Promise<Link> {
-        const query = firebaseDb.collection('links').doc(id);
+        const query = this.db.collection('links').doc(id);
         const doc = await query.get();
 
         if (!doc.exists || !doc.data()) {
@@ -91,7 +107,7 @@ class LinkFirestore implements LinkDb {
     }
 
     async scan(createdAt: Date, limit: number): Promise<Array<Link>> {
-        const result = await firebaseDb.collection('links')
+        const result = await this.db.collection('links')
             .where('created_at', '<', createdAt)
             .orderBy('created_at', 'desc')
             .limit(limit)
@@ -110,12 +126,5 @@ class LinkFirestore implements LinkDb {
     }
 }
 
-function toLink(record: RecordLink): Link {
-    return {
-        id: record.id,
-        link: record.link,
-        createdAt: record.created_at.toDate(),
-    }
-}
-
-export const linkDb: LinkDb = new LinkFirestore();
+export const linkDb: LinkDb =
+    new LinkFirestore(firebaseDb);
