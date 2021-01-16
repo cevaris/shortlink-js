@@ -1,9 +1,5 @@
 .mat-list-item {
   height: auto;
-  margin: 10px;
+  margin-top: 5px;
   cursor: pointer;
-}
-
-app-link-card {
-  width: 100%;
 }

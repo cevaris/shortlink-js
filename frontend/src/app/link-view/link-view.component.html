@@ -1,13 +1,10 @@
-<div fxLayout="row">
-    <div fxFlex="30"></div>
-    <div fxFlex="60">
+<div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div fxFlex="50" fxFlex.sm="80" fxFlex.xs="120">
         <div *ngIf="loading" fxLayoutAlign="center">
             <mat-spinner></mat-spinner>
         </div>
         <div *ngIf="link$ | async as link">
-            <br />
             <app-link-card [link]="link"></app-link-card>
         </div>
     </div>
-    <div fxFlex="30"></div>
 </div>

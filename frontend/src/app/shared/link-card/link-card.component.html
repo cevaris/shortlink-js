@@ -1,17 +1,15 @@
 <mat-card>
     <mat-card-header>
-        <!-- <div class="mat-card-header-text"> -->
         <mat-card-title>
-            <a class="link"
-                (click)="navigateToLink($event)">{{redirectDomain}}/{{link.id}}</a>
-            <button mat-button (click)="copyToClipboard($event)">
-                <span class="material-icons">content_copy</span>
-            </button>
+            <div>
+                <button mat-button (click)="copyToClipboard($event)">
+                    <span class="material-icons">content_copy</span>
+                </button>
+                <a class="link"
+                    (click)="navigateToLink($event)">{{redirectDomain}}/{{link.id}}</a>
+            </div>
         </mat-card-title>
-        <mat-card-subtitle class="text-one-line">
-            <span>{{link.link}}</span>
-        </mat-card-subtitle>
-        <!-- </div> -->
+        <mat-card-subtitle>{{link.link}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         Created At: {{link.created_at}}

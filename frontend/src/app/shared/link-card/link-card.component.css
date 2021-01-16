@@ -1,11 +1,22 @@
+:host /deep/ .mat-card-header-text {
+  margin: 0;
+  width: 100%;
+}
+
+app-link-card {
+  /* padding: 0px; */
+  width: 100%;
+}
+
 /* mat-card {
   max-width: 500px;
 } */
 
-.mat-card-header-text {
-  /* https://stackoverflow.com/a/43482040/3538289 */
-  /* width: 100%; */
-}
+/* https://stackoverflow.com/a/43482040/3538289 */
+/* .mat-card-header-text {
+  width: 100%;
+} */
+
 /* 
 mat-card-title {
   display: flex;
@@ -28,16 +39,17 @@ mat-card-subtitle {
   cursor: pointer;
 }
 
-.text-one-line {
-  /* white-space: nowrap;
+/* .text-one-line { */
+/* white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; */
 
-  /* word-break: break-all;
+/* word-break: break-all;
   white-space: pre-wrap; */
 
-  width: 300px;
-  white-space: nowrap;
+/* width: 300px; */
+/* max-width: 200px; */
+/* white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-}
+  text-overflow: ellipsis; */
+/* } */
