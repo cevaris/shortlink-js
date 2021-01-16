@@ -39,11 +39,14 @@ class LinkFirestore implements LinkDb {
      * @param sideEffect Function containing side effects to execute after link is persisted.
      */
     async create(linkUrl: string, sideEffect: SideEffect<Link>): Promise<Link> {
+        console.log('one');
         try {
             return await firebaseDb.runTransaction<Link>(
                 async (transaction: Transaction) => {
+                    console.log('two', transaction);
                     const id: string = newId(6);
                     const doc: DocumentReference = firebaseDb.collection('links').doc(id);
+                    console.log('three', doc);
                     const now: Date = new Date();
 
                     const record: RecordLink = {
