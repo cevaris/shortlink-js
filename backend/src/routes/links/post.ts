@@ -3,7 +3,7 @@ import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../
 import { linkPublisher } from '../../events/linksPublisher';
 import { respond } from '../../http/responses';
 import { httpStatus } from '../../http/status';
-import { isValidLink } from '../../http/valid';
+import { isValidLink } from '../../http/validLink';
 import { toLinkCreateEvent } from '../../proto/conv';
 import { linkDb } from '../../storage/linkDb';
 import { Link } from '../../../tests/types';
