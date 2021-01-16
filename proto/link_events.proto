@@ -16,7 +16,7 @@ message LinkCreateEvent {
 message LinkEvent {
     oneof event {
         LinkCreateEvent link_create_event = 1;
-        // LinkDeleteEvent link_delete_event = 1;
-        // LinkModifyEvent link_modify_event = 1;
+        // LinkDeleteEvent link_delete_event = 2:
+        // LinkModifyEvent link_modify_event = 3;
     }
 }
