@@ -1,6 +1,5 @@
 import express from 'express';
-import { ApiReason } from '../api';
-import { respond } from '../http/responses';
+import { config } from '../config';
 import { linkDb, StorageNotFoundError } from '../storage/linkDb';
 
 const router = express.Router();
@@ -10,32 +9,14 @@ router.get('/:id', async (req: express.Request, res: express.Response) => {
 
     try {
         const link = await linkDb.get(id);
-        res.redirect(link.link);
+        return res.redirect(link.link);
     } catch (error) {
         if (error instanceof StorageNotFoundError) {
             const message = `link "${id}" not found`;
-            return respond(res, {
-                error: {
-                    code: 404,
-                    message: message,
-                    errors: [{
-                        reason: ApiReason.NotFound,
-                        message: message,
-                    }]
-                }
-            });
+            return res.redirect(`${config.frontendDomain}?flash=${message}`);
         }
 
-        return respond(res, {
-            error: {
-                code: 503,
-                message: error.message,
-                errors: [{
-                    reason: ApiReason.Error,
-                    message: error.message,
-                }]
-            }
-        });
+        return res.redirect(`${config.frontendDomain}?flash=${error.message}`);
     }
 });
 module.exports = router;

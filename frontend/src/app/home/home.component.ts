@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Links, LinksService } from '../links.service';
@@ -19,7 +21,31 @@ export class HomeComponent implements OnInit {
   private subscription: Subscription;
   private nextPageToken: string | null = null;
 
-  constructor(private linkService: LinksService) { }
+  constructor(
+    private linkService: LinksService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackbar: MatSnackBar
+  ) {
+
+    const flash = this.route.snapshot.queryParamMap.get('flash');
+    if (flash) {
+      const noAction = '';
+
+      // remove flash from url, do not add flash to url history
+      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+
+      // render global flash error message
+      this.snackbar.open(
+        flash,
+        noAction,
+        {
+          verticalPosition: 'top', horizontalPosition: 'center',
+          panelClass: ['mat-toolbar', 'mat-accent']
+        }
+      );
+    }
+  }
 
   ngOnInit(): void {
     this.loadLinks();
