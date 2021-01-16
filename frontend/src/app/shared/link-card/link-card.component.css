@@ -1,16 +1,43 @@
-.mat-card-header-text {
-  width: 100%;
-}
+/* mat-card {
+  max-width: 500px;
+} */
 
+.mat-card-header-text {
+  /* https://stackoverflow.com/a/43482040/3538289 */
+  /* width: 100%; */
+}
+/* 
 mat-card-title {
   display: flex;
   justify-content: space-between;
+} */
+
+/* mat-card-header {
+  padding-left: -45px;
 }
 
-mat-card-content {
+mat-card-subtitle {
+  padding-left: -45px;
+} */
+
+/* mat-card-content {
   padding-left: 45px;
-}
+} */
 
 .link {
-  cursor: pointer; 
+  cursor: pointer;
+}
+
+.text-one-line {
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; */
+
+  /* word-break: break-all;
+  white-space: pre-wrap; */
+
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

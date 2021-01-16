@@ -1,5 +1,5 @@
 import { Clipboard } from "@angular/cdk/clipboard";
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ApiLink } from 'src/app/types';
 import { environment } from 'src/environments/environment';
