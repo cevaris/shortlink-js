@@ -59,6 +59,7 @@ export class LinkFirestore implements LinkDb {
         try {
             return await this.db.runTransaction<Link>(
                 async (transaction: Transaction) => {
+                    console.log('got here', transaction);
                     const id: string = newId(6);
                     const doc: DocumentReference = this.db.collection('links').doc(id);
                     const now: Date = new Date();
@@ -68,8 +69,6 @@ export class LinkFirestore implements LinkDb {
                         link: linkUrl,
                         created_at: Timestamp.fromDate(now),
                     };
-
-                    console.log(transaction);
                     // transaction.create(doc, record);
                     transaction.create(doc, record);
 

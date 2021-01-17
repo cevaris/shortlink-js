@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@firebase/testing": "^0.20.11",
     "@types/cors": "^2.8.9",
     "@types/jest": "^26.0.19",
     "@types/supertest": "^2.0.10",
