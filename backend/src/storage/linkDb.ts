@@ -62,13 +62,13 @@ export class LinkFirestore implements LinkDb {
                     const id: string = newId(6);
                     const doc: DocumentReference = this.db.collection('links').doc(id);
                     const now: Date = new Date();
-                
+
                     const record: RecordLink = {
                         id: id,
                         link: linkUrl,
                         created_at: Timestamp.fromDate(now),
                     };
-                    // transaction.create(doc, record);
+
                     transaction.create(doc, record);
 
                     const link: Link = toLink(record);
