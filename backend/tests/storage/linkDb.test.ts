@@ -1,4 +1,4 @@
-import { Transaction } from "@google-cloud/firestore";
+import { CollectionReference, DocumentData, Transaction } from "@google-cloud/firestore";
 import { firebaseDb } from '../../src/clients/firebaseClient';
 import { linkDb, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
@@ -9,15 +9,19 @@ import { Link } from '../types';
 test('insert link successfully', async () => {
     const link = 'http://example.com';
 
+    // const doc = jest.fn<CollectionReference<DocumentData>, []>();
     const doc = jest.fn();
     const collectionSpy = jest
         .spyOn(firebaseDb, 'collection')
-        .mockReturnValue((({ doc }) as any));
+        // .mockImplementation(doc)
+        .mockReturnValue(({ doc }) as unknown as CollectionReference<DocumentData>);
+    // .mockReturnValue(doc as unknown as CollectionReference<DocumentData>>);
 
     const create = jest.fn();
+    const transaction = { create } as unknown as Transaction;
     const runTransaction =
         (updateFunction: (t: Transaction) => Promise<Link>) => {
-            return updateFunction({ create } as any);
+            return updateFunction(transaction);
         };
 
     const runTransactionSpy = jest
