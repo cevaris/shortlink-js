@@ -69,11 +69,11 @@ export class LinkFirestore implements LinkDb {
                         created_at: Timestamp.fromDate(now),
                     };
 
+                    // Attempt to persist the record
                     transaction.create(doc, record);
 
+                    // If sideEffect throws, transaction is rolled back
                     const link: Link = toLink(record);
-
-                    // If sideEffect throw, transaction is rolled back
                     await sideEffect(link);
 
                     return link;

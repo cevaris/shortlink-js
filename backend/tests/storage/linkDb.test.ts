@@ -3,7 +3,7 @@ import { firebaseDb } from '../../src/clients/firebaseClient';
 import { linkDb, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
 
-beforeAll(() => {
+beforeEach(() => {
     jest.clearAllMocks();
 });
 
@@ -59,7 +59,7 @@ test('insert link to throw error on duplicate document', async () => {
 
     const link = 'http://example.com';
     const result = await linkDb.create(link, sideEffect);
-    
+
     expect(runTransactionSpy).toHaveBeenCalledTimes(3);
     expect(collectionSpy).toHaveBeenCalledWith('links');
     expect(doc).toHaveBeenCalledTimes(3);
@@ -68,50 +68,75 @@ test('insert link to throw error on duplicate document', async () => {
     expect(result.link).toBe(link);
 });
 
-// test('insert link to throw error on duplicate document', async () => {
-//     const link = 'http://example.com';
+test('insert link to throw on error', async () => {
+    const doc = jest.fn();
+    const collectionSpy = jest
+        .spyOn(firebaseDb, 'collection')
+        .mockReturnValue(({ doc }) as unknown as CollectionReference<DocumentData>);
 
-//     const create = jest.fn();
-//     const doc = jest.fn(() => ({ create }));
-//     const collection = jest
-//         .spyOn(firebaseDb, 'collection')
-//         .mockReturnValue((({ doc }) as any));
-//     // mocks 2 duplicate code failures, then succeed
-//     create.mockRejectedValueOnce({ code: 6 });
-//     create.mockRejectedValueOnce({ code: 6 });
-//     create.mockReturnValue({});
+    const create = jest.fn();
+    const transaction = { create } as unknown as Transaction;
+    const runTransactionSpy = jest
+        .spyOn(firebaseDb, 'runTransaction')
+        .mockImplementation((updateFunction: Function) => {
+            return updateFunction(transaction);
+        });
 
-//     const result = await linkDb.create(link);
+    const errorMessage = 'intentional error message';
+    create.mockImplementationOnce(() => { throw Error(errorMessage) });
 
-//     expect(collection).toHaveBeenCalledWith('links');
-//     expect(doc).toHaveBeenCalled();
-//     expect(create).toHaveBeenCalled();
-//     expect(result.link).toBe(link);
-// });
+    const link = 'http://example.com';
+    const sideEffect: SideEffect<Link> = jest.fn();
+    try {
+        await linkDb.create(link, sideEffect);
+        fail('should have thrown on create');
+    } catch (error) {
+        expect(error.message).toBe(errorMessage);
+    }
 
-// test('insert link to throw error', async () => {
-//     const link = 'http://example.com';
-//     const message = 'test error.';
-
-//     const create = jest.fn();
-//     const doc = jest.fn(() => ({ create }));
-//     const collection = jest
-//         .spyOn(firebaseDb, 'collection')
-//         .mockReturnValue((({ doc }) as any));
-//     create.mockRejectedValue(new Error(message));
-
-//     try {
-//         await linkDb.create(link);
-//         fail('call should have thrown');
-//     } catch (error) {
-//         expect(error.message).toBe(message);
-//     }
-
-//     expect(collection).toHaveBeenCalledWith('links');
-//     expect(create).toHaveBeenCalled();
-//     expect(doc).toHaveBeenCalled();
-// });
+    expect(runTransactionSpy).toHaveBeenCalled();
+    expect(collectionSpy).toHaveBeenCalledWith('links');
+    expect(doc).toHaveBeenCalled();
+    expect(create).toHaveBeenCalled();
+    expect(sideEffect).not.toHaveBeenCalled();
+});
 
 
-//test('transaction to revert if sideeffect throws', async () => {
-// });
+test('transaction to revert if side effect throws', async () => {
+    const doc = jest.fn();
+    const collectionSpy = jest
+        .spyOn(firebaseDb, 'collection')
+        .mockReturnValue(({ doc }) as unknown as CollectionReference<DocumentData>);
+
+    const create = jest.fn();
+    const transaction = { create } as unknown as Transaction;
+    const runTransactionSpy = jest
+        .spyOn(firebaseDb, 'runTransaction')
+        .mockImplementation(async (updateFunction: Function) => {
+            try {
+                return await updateFunction(transaction);
+            } catch (error) {
+                // runTransaction will catch the error and rollback transaction
+                expect(error.message).toBe(errorMessage);
+                throw error;
+            }
+        });
+
+    const sideEffect = jest.fn();
+    const errorMessage = 'intentional error message';
+    sideEffect.mockRejectedValue(Error(errorMessage));
+
+    const link = 'http://example.com';
+    try {
+        await linkDb.create(link, sideEffect);
+        fail('should have thrown on create');
+    } catch (error) {
+        expect(error.message).toBe(errorMessage);
+    }
+
+    expect(runTransactionSpy).toHaveBeenCalled();
+    expect(collectionSpy).toHaveBeenCalledWith('links');
+    expect(doc).toHaveBeenCalled();
+    expect(create).toHaveBeenCalled();
+    expect(sideEffect).toHaveBeenCalled();
+});
