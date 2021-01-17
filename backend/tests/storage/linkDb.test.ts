@@ -1,3 +1,4 @@
+// import { Transaction } from "@google-cloud/firestore"
 import { firebaseDb } from '../../src/clients/firebaseClient';
 import { linkDb, LinkFirestore, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
@@ -13,33 +14,20 @@ test('insert link successfully', async () => {
         .spyOn(firebaseDb, 'collection')
         .mockReturnValue((({ doc }) as any));
 
-    // const runTransaction = jest.fn()
-    //     .mockImplementation((transaction: FirebaseFirestore.Transaction): Promise<Link>) => {
-    //         // console.log('sideEffect');
-    //         // sideEffect({} as Link);
-    //         // return { create };
-    //         return {transaction}
-    //     }));
-
     const create = jest.fn();
-    const transaction = jest.fn(() => ({ create }));
-    const runTransaction = jest.fn()
-        .mockImplementation(
-            (callback: (t: any) => Promise<Link>) => {
-                console.log('callback');
-                return callback(transaction);
-            });
-    // const runTransaction = jest.fn();
+    // const transaction = jest.fn(() => ({ create: create }));
+    const transaction = {
+        create: jest.fn(),
+    }
+    const runTransaction =
+        (updateFunction: (t: FirebaseFirestore.Transaction) => Promise<Link>) => {
+            console.log('callback', transaction);
+            return updateFunction(transaction as any);
+        };
+
     const runTransactionSpy = jest
         .spyOn(firebaseDb, 'runTransaction')
-        .mockImplementation(runTransaction);
-    // runTransaction.mockResolvedValue({ link: link });
-    runTransaction.mockImplementation(
-        (callback: (t: any) => Promise<Link>) => {
-            console.log('callback');
-            return callback(transaction);
-        });
-    // create.mockReturnValue({ link: link });
+        .mockImplementation(runTransaction as any);
 
     const sideEffect: SideEffect<Link> = jest.fn();
     const result = await linkDb.create(link, sideEffect);
@@ -47,7 +35,7 @@ test('insert link successfully', async () => {
     console.log(result)
 
     expect(runTransactionSpy).toHaveBeenCalled();
-    expect(runTransaction).toHaveBeenCalled();
+    // expect(runTransaction).toHaveBeenCalled();
 
     // expect(collection).toHaveBeenCalledWith('links');
     // expect(doc).toHaveBeenCalled();
