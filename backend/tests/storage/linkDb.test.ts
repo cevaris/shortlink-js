@@ -1,6 +1,6 @@
-// import { Transaction } from "@google-cloud/firestore"
+import { Transaction } from "@google-cloud/firestore";
 import { firebaseDb } from '../../src/clients/firebaseClient';
-import { linkDb, LinkFirestore, SideEffect } from '../../src/storage/linkDb';
+import { linkDb, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
 
 
@@ -10,19 +10,14 @@ test('insert link successfully', async () => {
     const link = 'http://example.com';
 
     const doc = jest.fn();
-    const collection = jest
+    const collectionSpy = jest
         .spyOn(firebaseDb, 'collection')
         .mockReturnValue((({ doc }) as any));
 
     const create = jest.fn();
-    // const transaction = jest.fn(() => ({ create: create }));
-    const transaction = {
-        create: jest.fn(),
-    }
     const runTransaction =
-        (updateFunction: (t: FirebaseFirestore.Transaction) => Promise<Link>) => {
-            console.log('callback', transaction);
-            return updateFunction(transaction as any);
+        (updateFunction: (t: Transaction) => Promise<Link>) => {
+            return updateFunction({ create } as any);
         };
 
     const runTransactionSpy = jest
@@ -32,16 +27,12 @@ test('insert link successfully', async () => {
     const sideEffect: SideEffect<Link> = jest.fn();
     const result = await linkDb.create(link, sideEffect);
 
-    console.log(result)
-
     expect(runTransactionSpy).toHaveBeenCalled();
-    // expect(runTransaction).toHaveBeenCalled();
-
-    // expect(collection).toHaveBeenCalledWith('links');
-    // expect(doc).toHaveBeenCalled();
-    // expect(create).toHaveBeenCalled();
-    // expect(sideEffect).toHaveBeenCalled();
-    // expect(result.link).toBe(link);
+    expect(collectionSpy).toHaveBeenCalledWith('links');
+    expect(doc).toHaveBeenCalled();
+    expect(create).toHaveBeenCalled();
+    expect(sideEffect).toHaveBeenCalled();
+    expect(result.link).toBe(link);
 });
 
 // test('insert link to throw error on duplicate document', async () => {

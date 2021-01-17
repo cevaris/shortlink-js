@@ -59,7 +59,6 @@ export class LinkFirestore implements LinkDb {
         try {
             return await this.db.runTransaction<Link>(
                 async (transaction: Transaction) => {
-                    console.log('got here');
                     const id: string = newId(6);
                     const doc: DocumentReference = this.db.collection('links').doc(id);
                     const now: Date = new Date();
