@@ -4,18 +4,16 @@ import { linkDb, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
 
 
+
 // https://itnext.io/firebase-firestore-unit-testing-with-jest-and-kind-of-typescript-e26874196b1e
 
 test('insert link successfully', async () => {
     const link = 'http://example.com';
 
-    // const doc = jest.fn<CollectionReference<DocumentData>, []>();
     const doc = jest.fn();
     const collectionSpy = jest
         .spyOn(firebaseDb, 'collection')
-        // .mockImplementation(doc)
         .mockReturnValue(({ doc }) as unknown as CollectionReference<DocumentData>);
-    // .mockReturnValue(doc as unknown as CollectionReference<DocumentData>>);
 
     const create = jest.fn();
     const transaction = { create } as unknown as Transaction;
