@@ -4,9 +4,7 @@ import { linkDb, SideEffect } from '../../src/storage/linkDb';
 import { Link } from '../types';
 
 
-
 // https://itnext.io/firebase-firestore-unit-testing-with-jest-and-kind-of-typescript-e26874196b1e
-
 test('insert link successfully', async () => {
     const link = 'http://example.com';
 
@@ -17,14 +15,11 @@ test('insert link successfully', async () => {
 
     const create = jest.fn();
     const transaction = { create } as unknown as Transaction;
-    const runTransaction =
-        (updateFunction: (t: Transaction) => Promise<Link>) => {
-            return updateFunction(transaction);
-        };
-
     const runTransactionSpy = jest
         .spyOn(firebaseDb, 'runTransaction')
-        .mockImplementation(runTransaction as any);
+        .mockImplementation((updateFunction: Function) => {
+            return updateFunction(transaction);
+        });
 
     const sideEffect: SideEffect<Link> = jest.fn();
     const result = await linkDb.create(link, sideEffect);
