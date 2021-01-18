@@ -1,4 +1,5 @@
-import { TestBed, async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
+import { Title } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -18,14 +19,7 @@ describe('AppComponent', () => {
 
   it(`should have as title 'short-link'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('short-link');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('short-link app is running!');
+    const title = TestBed.inject(Title);
+    expect(title.getTitle()).toEqual('ShortLink');
   });
 });

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LinkCardComponent } from './link-card.component';
 
-describe('LinkCardComponent', () => {
+xdescribe('LinkCardComponent', () => {
   let component: LinkCardComponent;
   let fixture: ComponentFixture<LinkCardComponent>;
 

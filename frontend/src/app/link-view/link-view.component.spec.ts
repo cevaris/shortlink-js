@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LinkViewComponent } from './link-view.component';
 
-describe('LinkViewComponent', () => {
+xdescribe('LinkViewComponent', () => {
   let component: LinkViewComponent;
   let fixture: ComponentFixture<LinkViewComponent>;
 
