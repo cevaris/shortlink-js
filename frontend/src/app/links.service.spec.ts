@@ -63,16 +63,37 @@ describe('LinksService', () => {
     }
 
     service.get(linkId).subscribe(
-      (response: ApiLink) => {
-        fail('request should have failed');
-      },
-      (error: Error) => {
-        expect(error.message).toBe(errorMessage);
-      }
+      () => fail('request should have failed'),
+      (error: Error) => expect(error.message).toBe(errorMessage)
     );
 
     const req = httpMock.expectOne('http://localhost:3000/links/testId.json');
     expect(req.request.method).toBe('GET');
+    req.flush(response);
+  });
+
+  it('post is successful', () => {
+    const link: ApiLink = {
+      id: 'testId',
+      link: 'http://example.com',
+      created_at: new Date().toISOString()
+    };
+
+    const response: ApiResponse<ApiLink> = {
+      data: {
+        kind: ApiKind.Link,
+        items: [link]
+      }
+    }
+
+    service.create(link.link).subscribe(
+      (response: ApiLink) => {
+        expect(response).toEqual(link);
+      }
+    );
+
+    const req = httpMock.expectOne('http://localhost:3000/links.json');
+    expect(req.request.method).toBe('POST');
     req.flush(response);
   });
 });
