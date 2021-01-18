@@ -48,14 +48,6 @@ describe('LinkFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not be valid if form is empty', () => {
-    component.linkForm.get('link').markAsTouched();
-    fixture.detectChanges();
-
-    expect(component.linkForm.valid).toBe(false);
-    expect(fixture.debugElement.query(By.css('#error-link-required'))).toBeTruthy();
-  });
-
   it('should create ApiLink', () => {
     expect(component.submitting).toBe(false);
 
@@ -75,6 +67,14 @@ describe('LinkFormComponent', () => {
     // unsubscribe forces subscription to resolve and invoke 'finalize()'
     component.subscription.unsubscribe();
     expect(component.submitting).toBe(false);
+  });
+
+  it('should not be valid if form is empty', () => {
+    component.linkForm.get('link').markAsTouched();
+    fixture.detectChanges();
+
+    expect(component.linkForm.valid).toBe(false);
+    expect(fixture.debugElement.query(By.css('#error-link-required'))).toBeTruthy();
   });
 
   it('should handle link bad request error', async () => {
@@ -147,7 +147,6 @@ describe('LinkFormComponent', () => {
     component.subscription.unsubscribe();
     expect(component.submitting).toBe(false);
 
-    component.linkForm.get('link').markAsTouched();
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('#error-form'))).toBeTruthy();
   });
