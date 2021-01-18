@@ -10,6 +10,7 @@ app.use(express.json());
 // allow CORS from select origins
 const corsOptions = {
     origin: [
+        'http://localhost:4000',                // e2e
         'http://localhost:4200',                // development
         'https://project-id-shortlink.web.app', // production frontend web app
     ],
