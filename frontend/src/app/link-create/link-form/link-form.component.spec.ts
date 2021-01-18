@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of, throwError } from 'rxjs';
 import { LinksService } from 'src/app/links.service';
@@ -47,8 +48,12 @@ describe('LinkFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('form invalid when empty', () => {
+  it('should not be valid if form is empty', () => {
+    component.linkForm.get('link').markAsTouched();
+    fixture.detectChanges();
+
     expect(component.linkForm.valid).toBe(false);
+    expect(fixture.debugElement.query(By.css('#error-link-required'))).toBeTruthy();
   });
 
   it('should create ApiLink', () => {
@@ -72,14 +77,14 @@ describe('LinkFormComponent', () => {
     expect(component.submitting).toBe(false);
   });
 
-  it('should handle link bad request error', () => {
+  it('should handle link bad request error', async () => {
     const errorMessage = 'intentional error';
     const response: ApiResponse<ApiLink> = {
       error: {
         code: 400,
         message: errorMessage,
         errors: [{
-          reason: ApiReason.Error,
+          reason: ApiReason.Invalid,
           message: errorMessage,
           location: ApiLocation.Link,
           location_type: ApiLocationType.Parameter
@@ -102,10 +107,15 @@ describe('LinkFormComponent', () => {
     expect(linkService.create).toHaveBeenCalledWith(link.link);
     expect(component.formError).toBe('');
     expect(component.linkForm.get('link').errors)
-      .toEqual({ [ApiReason.Error]: errorMessage });
+      .toEqual({ [ApiReason.Invalid]: errorMessage });
 
     component.subscription.unsubscribe();
     expect(component.submitting).toBe(false);
+
+    // trigger & wait for DOM changes to go into effect.
+    component.linkForm.get('link').markAsTouched();
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('#error-link-invalid'))).toBeTruthy();
   });
 
   it('should handle generic error', () => {
@@ -136,5 +146,9 @@ describe('LinkFormComponent', () => {
 
     component.subscription.unsubscribe();
     expect(component.submitting).toBe(false);
+
+    component.linkForm.get('link').markAsTouched();
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('#error-form'))).toBeTruthy();
   });
 });
