@@ -4,7 +4,6 @@ import { LinksService } from './links.service';
 import { ApiKind, ApiLink, ApiReason, ApiResponse } from './types';
 
 describe('LinksService', () => {
-  // const httpClientSpy = spyOn<HttpClient, Observable<ArrayBuffer>>(HttpClient, 'get');
   let httpMock: HttpTestingController;
   let service: LinksService;
 
