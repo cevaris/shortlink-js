@@ -1,19 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LinkCreateComponent } from './link-create.component';
 
 xdescribe('LinkCreateComponent', () => {
   let component: LinkCreateComponent;
   let fixture: ComponentFixture<LinkCreateComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ LinkCreateComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LinkCreateComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LinkCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -24,10 +24,8 @@ describe('LinkFormComponent', () => {
   let component: LinkFormComponent;
   let fixture: ComponentFixture<LinkFormComponent>;
 
-  beforeEach(() => {
-    linkServiceCreateSpy = spyOn(linkService, 'create');
-
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [LinkFormComponent],
       imports: [
         BrowserAnimationsModule,
@@ -39,6 +37,7 @@ describe('LinkFormComponent', () => {
       providers: [{ provide: LinksService, useValue: linkService }],
     }).compileComponents();
 
+    linkServiceCreateSpy = spyOn(linkService, 'create');
     fixture = TestBed.createComponent(LinkFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
