@@ -60,7 +60,7 @@ describe('LinksService', () => {
           message: errorMessage
         }]
       }
-    }
+    };
 
     service.get(linkId).subscribe(
       () => fail('request should have failed'),
