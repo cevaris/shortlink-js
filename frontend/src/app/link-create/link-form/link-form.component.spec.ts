@@ -60,7 +60,9 @@ describe('LinkFormComponent', () => {
       expect(v).toBe(link);
     });
 
-    component.onSubmit();
+    fixture.debugElement.query(By.css('#form-submit'))
+      .triggerEventHandler('click', {});
+
     expect(linkService.create).toHaveBeenCalledWith(link.link);
     expect(component.formError).toBe('');
 
@@ -103,7 +105,9 @@ describe('LinkFormComponent', () => {
       () => fail('should have thrown')
     );
 
-    component.onSubmit();
+    fixture.debugElement.query(By.css('#form-submit'))
+      .triggerEventHandler('click', {});
+
     expect(linkService.create).toHaveBeenCalledWith(link.link);
     expect(component.formError).toBe('');
     expect(component.linkForm.get('link').errors)
@@ -140,7 +144,9 @@ describe('LinkFormComponent', () => {
     expect(component.linkForm.valid).toBe(true);
     expect(component.submitting).toBe(false);
 
-    component.onSubmit();
+    fixture.debugElement.query(By.css('#form-submit'))
+      .triggerEventHandler('click', {});
+
     expect(linkService.create).toHaveBeenCalledWith(link.link);
     expect(component.formError).toBe(errorMessage);
 
