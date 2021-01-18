@@ -7,8 +7,6 @@ beforeEach(() => {
     jest.clearAllMocks();
 });
 
-process.on('unhandledRejection', console.warn)
-
 // https://itnext.io/firebase-firestore-unit-testing-with-jest-and-kind-of-typescript-e26874196b1e
 test('insert link successfully', async () => {
     const doc = jest.fn();
