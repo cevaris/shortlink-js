@@ -5,6 +5,7 @@ import { app } from '../../../src/app';
 import { linkPublisher } from '../../../src/events/linksPublisher';
 import { httpStatus } from '../../../src/http/status';
 import { toLinkCreateEvent } from '../../../src/proto/conv';
+import { newId } from '../../../src/storage/id';
 import { linkDb, SideEffect } from '../../../src/storage/linkDb';
 import { Link } from '../../types';
 
@@ -30,6 +31,30 @@ test('missing link json body field returns 400', async () => {
         .post('/links.json');
 
     const testMessage = `missing "link" json body field.`;
+    expect(resp.body).toStrictEqual({
+        error: {
+            code: 400,
+            message: testMessage,
+            errors: [{
+                reason: 'invalid',
+                location: 'link',
+                location_type: 'parameter',
+                message: testMessage,
+            }]
+        }
+    });
+    expect(spyLinkDbCreate).not.toBeCalled();
+    expect(spyHttpStatusGet).not.toBeCalled();
+    expect(resp.status).toBe(400);
+});
+
+
+test('link value is too long return 400', async () => {
+    const resp = await request(server)
+        .post('/links.json')
+        .send({ 'link': `http://test.com/${newId(2001)}` });
+
+    const testMessage = `link value is too long, please shorten the link.`;
     expect(resp.body).toStrictEqual({
         error: {
             code: 400,

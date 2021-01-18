@@ -1,4 +1,5 @@
 import express from 'express';
+import { Link } from '../../../tests/types';
 import { ApiKind, ApiLocation, ApiLocationType, ApiReason, toApiLink } from '../../api';
 import { linkPublisher } from '../../events/linksPublisher';
 import { respond } from '../../http/responses';
@@ -6,14 +7,30 @@ import { httpStatus } from '../../http/status';
 import { isValidLink } from '../../http/validLink';
 import { toLinkCreateEvent } from '../../proto/conv';
 import { linkDb } from '../../storage/linkDb';
-import { Link } from '../../../tests/types';
 
 const router = express.Router();
 
 router.post('/links.json', async (req: express.Request, res: express.Response) => {
-    const linkURL = req.body?.link?.toString();
+    const linkURL: string = req.body?.link?.toString();
     if (!linkURL) {
         const message = 'missing "link" json body field.';
+        return respond(res, {
+            error: {
+                code: 400,
+                message: message,
+                errors: [{
+                    reason: ApiReason.Invalid,
+                    location_type: ApiLocationType.Parameter,
+                    location: ApiLocation.Link,
+                    message: message,
+                }]
+            }
+        });
+    }
+
+    const maxLinkSize = 2000;
+    if (linkURL.length > maxLinkSize) {
+        const message = 'link value is too long, please shorten the link.';
         return respond(res, {
             error: {
                 code: 400,
