@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { LinksService } from 'src/app/links.service';
@@ -11,7 +10,6 @@ import { ApiLink } from 'src/app/types';
 import { LinkFormComponent } from './link-form.component';
 
 // https://www.amadousall.com/unit-testing-angular-stubs-vs-spies-vs-mocks/
-
 describe('LinkFormComponent', () => {
   const linkService: LinksService = new LinksService(undefined);
   let linkServiceCreateSpy: jasmine.Spy<(link: string) => Observable<ApiLink>>;
@@ -29,7 +27,6 @@ describe('LinkFormComponent', () => {
         HttpClientTestingModule,
         MatFormFieldModule,
         MatInputModule,
-        MatToolbarModule,
         ReactiveFormsModule,
       ],
       providers: [{ provide: LinksService, useValue: linkService }],
