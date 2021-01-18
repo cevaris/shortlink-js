@@ -6,10 +6,6 @@ import { finalize } from 'rxjs/operators';
 import { LinksService } from '../../links.service';
 import { ApiError, ApiLink, ApiLocationType } from '../../types';
 
-interface LinkForm {
-  link: string
-}
-
 @Component({
   selector: 'app-link-form',
   templateUrl: './link-form.component.html',
@@ -17,15 +13,15 @@ interface LinkForm {
 })
 export class LinkFormComponent implements OnInit {
 
-  public linkForm: FormGroup;
+  linkForm: FormGroup;
   // string containing non-specific field form errors
-  public formError: string;
+  formError: string;
   // true if request is in progress
-  public submitting: boolean = false;
-  private subscription: Subscription;
+  submitting: boolean = false;
+  subscription: Subscription;
 
   // https://angular.io/guide/component-interaction#parent-listens-for-child-event
-  @Output() private linkEmitter = new EventEmitter<ApiLink>();
+  @Output() linkEmitter = new EventEmitter<ApiLink>();
 
   constructor(private linkService: LinksService) {
     this.linkForm = new FormGroup({
@@ -41,18 +37,16 @@ export class LinkFormComponent implements OnInit {
   }
 
   // https://juristr.com/blog/2019/02/display-server-side-validation-errors-with-angular/
-  onSubmit(data: LinkForm): void {
+  onSubmit(): void {
     this.submitting = true;
     this.formError = ''; // reset previous error, if any
 
-    this.subscription = this.linkService.create(data.link)
+    this.subscription = this.linkService.create(this.linkForm.value.link)
       .pipe(
-        finalize(() => this.submitting = false)
+        finalize(() => this.submitting = false),
       )
       .subscribe(
-        (response: ApiLink) => {
-          this.linkEmitter.emit(response);
-        },
+        (apiLink: ApiLink) => this.linkEmitter.emit(apiLink),
         (httpError: HttpErrorResponse) => {
           httpError.error.error?.errors.forEach((error: ApiError) => {
             if (error.location_type === ApiLocationType.Parameter && error.location) {
