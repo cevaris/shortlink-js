@@ -28,6 +28,7 @@ const appRoutes: Routes = [
   { path: 'links', component: LinkCreateComponent },
   { path: 'links/:id', component: LinkViewComponent },
   { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: '**', redirectTo: '/?flash=Page not found.' },
 ];
 
 @NgModule({
