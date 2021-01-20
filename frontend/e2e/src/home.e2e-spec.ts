@@ -1,7 +1,7 @@
 import { browser, by, element, ElementFinder } from 'protractor';
 import { expectNoErrors } from './utils';
 
-describe('/', () => {
+describe('Home', () => {
   afterEach(async () => {
     await expectNoErrors();
   });

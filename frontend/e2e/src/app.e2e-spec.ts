@@ -1,7 +1,7 @@
 import { browser, by, element } from 'protractor';
 import { expectNoErrors } from './utils';
 
-describe('ShortLink app', () => {
+describe('App', () => {
   afterEach(async () => {
     await expectNoErrors();
   });

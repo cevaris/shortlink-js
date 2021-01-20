@@ -1,7 +1,7 @@
 import { browser, by, element } from 'protractor';
 import { expectNoErrors } from './utils';
 
-describe('/links create', () => {
+describe('Links Create', () => {
   afterEach(async () => {
     await expectNoErrors();
   });
