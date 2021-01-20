@@ -15,7 +15,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     // https://github.com/angular/protractor/issues/4641
-    chromeOptions: { args: ["--headless", "--disable-gpu", "--window-size=800,600"] },
+    // chromeOptions: { args: ["--headless", "--disable-gpu", "--window-size=800,600"] },
   },
   directConnect: true,
   baseUrl: 'http://localhost:4000/',

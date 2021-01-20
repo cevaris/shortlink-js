@@ -5,11 +5,11 @@
                 <button mat-button (click)="copyToClipboard($event)">
                     <span class="material-icons">content_copy</span>
                 </button>
-                <a class="link"
+                <a class="short-link"
                     (click)="navigateToLink($event)">{{redirectDomain}}/{{link.id}}</a>
             </div>
         </mat-card-title>
-        <mat-card-subtitle>{{link.link}}</mat-card-subtitle>
+        <mat-card-subtitle class="long-link">{{link.link}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         Created At: {{link.created_at}}

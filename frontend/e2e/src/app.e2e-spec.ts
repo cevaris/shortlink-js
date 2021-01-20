@@ -1,12 +1,9 @@
-import { browser, logging } from 'protractor';
+import { browser } from 'protractor';
+import { expectNoErrors } from './utils';
 
 describe('ShortLink app', () => {
   afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    expect(logs).not.toContain(jasmine.objectContaining({
-      level: logging.Level.SEVERE,
-    } as logging.Entry));
+    await expectNoErrors();
   });
 
   it('should render ShortLink as title', async () => {
