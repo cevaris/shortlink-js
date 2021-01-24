@@ -1,7 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { LinksService } from './links.service';
-import { ApiKind, ApiLink, ApiReason, ApiResponse } from './types';
+import { ApiKind, ApiLink, ApiReason, ApiResponse } from '../types';
 
 describe('LinksService', () => {
   let httpMock: HttpTestingController;

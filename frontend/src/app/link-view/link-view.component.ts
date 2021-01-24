@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { LinksService } from '../links.service';
+import { LinksService } from '../services/links.service';
 import { ApiError, ApiLink } from '../types';
 
 @Component({

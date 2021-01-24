@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of, throwError } from 'rxjs';
-import { LinksService } from 'src/app/links.service';
+import { LinksService } from 'src/app/services/links.service';
 import { ApiLink, ApiLocation, ApiLocationType, ApiReason, ApiResponse } from 'src/app/types';
 import { LinkFormComponent } from './link-form.component';
 

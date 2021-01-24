@@ -3,7 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { LinksService } from '../../links.service';
+import { LinksService } from '../../services/links.service';
 import { ApiError, ApiLink, ApiLocationType } from '../../types';
 
 @Component({

@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Links, LinksService } from '../links.service';
+import { Links, LinksService } from '../services/links.service';
 import { ApiLink } from '../types';
 
 @Component({
