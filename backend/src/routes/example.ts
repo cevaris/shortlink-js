@@ -3,12 +3,14 @@ import express from 'express';
 const router = express.Router();
 
 /**
+ * https://web.postman.co/workspace/My-Workspace~dca240fb-157d-40f0-8f9b-d32dbad1752b/request/14316927-72012e66-8e7a-4d27-80a9-9f2bc718392d
+ * 
  * This endpoint is for demonstration purposes only.
  * Demonstrates different ways of sending information to server and
  * the server returning information back to client.
  *  
  */
-router.get('/events/:id.json', // ex. /events/abc.json
+router.post('/events/:id.json', // ex. /events/abc.json
     (request: express.Request, response: express.Response) => {
         // Request logic
 
@@ -24,7 +26,9 @@ router.get('/events/:id.json', // ex. /events/abc.json
         const eventHeader: string | undefined =
             request.header('X-EVENT-HEADER');
 
+        const body: string | undefined = request.body;
 
+        console.log('body', body);
 
         // Response logic
 
@@ -42,8 +46,7 @@ router.get('/events/:id.json', // ex. /events/abc.json
         );
 
         response.setHeader(
-            'X-EVENT-RESPONSE',
-            'example header value'
+            'X-RATE-LIMIT-BUDGET', 60
         );
 
         response.json({
@@ -52,6 +55,7 @@ router.get('/events/:id.json', // ex. /events/abc.json
             number_param: numberQueryParam,
             event_header: eventHeader,
             now_date: new Date().toISOString(),
+            body_value: body
         })
     });
 
