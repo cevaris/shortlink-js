@@ -8,7 +8,7 @@ app.use(express.json());
 
 
 // allow CORS from select origins
-const corsOptions = {
+const corsOptions: cors.CorsOptions = {
     origin: [
         'http://localhost:4000',                // e2e
         'http://localhost:4200',                // development
