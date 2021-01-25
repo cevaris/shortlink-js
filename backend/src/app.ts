@@ -18,10 +18,13 @@ const corsOptions: cors.CorsOptions = {
 };
 app.use(cors(corsOptions));
 
+// ignore favicon requests
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
 // import routes
 app.use(require('./routes/root'));
 app.use(require('./routes/links/get'));
 app.use(require('./routes/links/getById'));
 app.use(require('./routes/links/post'));
+app.use(require('./routes/example'));
 app.use(require('./routes/redirect'));
