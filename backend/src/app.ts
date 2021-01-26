@@ -12,6 +12,7 @@ const corsOptions: cors.CorsOptions = {
     origin: [
         'http://localhost:4000',                // e2e
         'http://localhost:4200',                // development
+        'https://web.postman.co',               // postman
         'https://project-id-shortlink.web.app', // production frontend web app
     ],
     optionsSuccessStatus: 200,

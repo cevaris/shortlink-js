@@ -30,12 +30,13 @@ export class HomeComponent implements OnInit {
 
     const flash = this.route.snapshot.queryParamMap.get('flash');
     if (flash) {
-      const noAction = '';
-
+      
       // remove flash from url, do not add flash to url history
-      this.router.navigate(['.'], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
-
+      this.router.navigate(['.'],
+      { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+      
       // render global flash error message
+      const noAction = '';
       this.snackbar.open(
         flash,
         noAction,

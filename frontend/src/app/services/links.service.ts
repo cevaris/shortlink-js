@@ -52,7 +52,7 @@ export class LinksService {
 
   scan(token?: string): Observable<Links> {
     const tokenValue = token || new Date().toISOString();
-    const url = `${environment.apiDomain}/links.json?token=${tokenValue}&limit=10`;
+    const url = `${environment.apiDomain}/links.json?token=${tokenValue}&limit=15`;
 
     return this.http.get<ApiResponse<ApiLink>>(url).pipe(
       map((response) => {

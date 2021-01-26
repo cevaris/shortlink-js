@@ -10,7 +10,7 @@ const router = express.Router();
  * the server returning information back to client.
  *  
  */
-router.post('/events/:id.json', // ex. /events/abc.json
+router.post('/example/:id.json', // ex. /example/abc.json
     (request: express.Request, response: express.Response) => {
         // Request logic
 
@@ -19,8 +19,12 @@ router.post('/events/:id.json', // ex. /events/abc.json
             request.params.id.toString();
 
         // extract a Query Parameter
-        const numberQueryParam: string | undefined =
-            request.query.number?.toString();
+        const baseQueryParam: string | undefined =
+            request.query.base?.toString();
+        const exponentQueryParam: string | undefined =
+            request.query.exponent?.toString();
+        const expResult = baseQueryParam && exponentQueryParam ?
+            Math.pow(parseFloat(baseQueryParam), parseFloat(exponentQueryParam)) : undefined;
 
         // extract a header value
         const eventHeader: string | undefined =
@@ -28,7 +32,7 @@ router.post('/events/:id.json', // ex. /events/abc.json
 
         const body: string | undefined = request.body;
 
-        console.log('body', body);
+
 
         // Response logic
 
@@ -49,14 +53,16 @@ router.post('/events/:id.json', // ex. /events/abc.json
             'X-RATE-LIMIT-BUDGET', 60
         );
 
-        response.json({
-            ok: true,
-            id_param: idUrlParam,
-            number_param: numberQueryParam,
-            event_header: eventHeader,
-            now_date: new Date().toISOString(),
-            body_value: body
-        })
+        response
+            .status(200)
+            .json({
+                id_param: idUrlParam,
+                base_param: baseQueryParam,
+                exponent_param: exponentQueryParam,
+                exponent_result: expResult,
+                event_header: eventHeader,
+                body_value: body
+            })
     });
 
 module.exports = router;
