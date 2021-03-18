@@ -81,6 +81,7 @@ test('create new link returns 200', async () => {
             return Promise.resolve(link);
         });
     spyHttpStatusGet.mockResolvedValue(200);
+    spyPublishCreateEvent.mockResolvedValue();
 
     const resp = await request(server)
         .post('/links.json')
